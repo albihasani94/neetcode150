@@ -1,12 +1,17 @@
 package com.albin.neetcode;
 
 public class TwoSum {
-    /**
-     * Two Sum: return indices of the two numbers such that they add up to target.
-     * TODO: implement this method.
-     */
     public int[] twoSum(int[] nums, int target) {
-        // Empty stub for user to implement
+        for (int i = 0 ; i < nums.length; i++) {
+            for (int j = 1; j < nums.length; j++) {
+                if (i == j) {
+                    continue;
+                }
+                if (nums[i] + nums[j] == target) {
+                    return new int[] {i, j};
+                }
+            }
+        }
         return new int[0];
     }
 }
