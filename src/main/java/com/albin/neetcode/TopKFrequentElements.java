@@ -1,0 +1,26 @@
+package com.albin.neetcode;
+
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.Map;
+
+public class TopKFrequentElements {
+    public int[] topKFrequent(int[] nums, int k) {
+        Map<Integer, Integer> frequencies = new HashMap<>();
+
+        for (int num : nums) {
+            frequencies.merge(num, 1, Integer::sum);
+        }
+
+        return frequencies.entrySet()
+                .stream()
+                .sorted(byMaxCount())
+                .limit(k)
+                .mapToInt(Map.Entry::getKey)
+                .toArray();
+    }
+
+    private static Comparator<Map.Entry<Integer, Integer>> byMaxCount() {
+        return (a , b) -> Integer.compare(b.getValue(), a.getValue());
+    }
+}
