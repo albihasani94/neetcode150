@@ -22,6 +22,21 @@ public class TwoSumTest {
     }
 
     @Test
+    public void neetcodeExample1() {
+        assertTwoSumEquals(new int[]{3, 4, 5, 6}, 7, new int[]{0, 1});
+    }
+
+    @Test
+    public void neetcodeExample2() {
+        assertTwoSumEquals(new int[]{4, 5, 6}, 10, new int[]{0, 2});
+    }
+
+    @Test
+    public void neetcodeExample3() {
+        assertTwoSumEquals(new int[]{5, 5}, 10, new int[]{0, 1});
+    }
+
+    @Test
     public void example1() {
         assertTwoSumEquals(new int[]{2,7,11,15}, 9, new int[]{0,1});
     }
@@ -38,6 +53,11 @@ public class TwoSumTest {
 
     @Test
     public void negativesAndZero() {
-        assertTwoSumEquals(new int[]{-1,0,1,2}, 1, new int[]{0,3});
+        assertTwoSumEquals(new int[]{-3, 0, 4, 90}, 1, new int[]{0, 2});
+    }
+
+    @Test
+    public void allNegatives() {
+        assertTwoSumEquals(new int[]{-1, -2, -3, -4, -5}, -8, new int[]{2, 4});
     }
 }

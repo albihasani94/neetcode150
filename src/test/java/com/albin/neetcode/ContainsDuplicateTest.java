@@ -16,6 +16,16 @@ class ContainsDuplicateTest {
     }
 
     @Test
+    void neetcodeExample1_hasDuplicate() {
+        assertTrue(solution.hasDuplicate(new int[]{1, 2, 3, 3}));
+    }
+
+    @Test
+    void neetcodeExample2_noDuplicate() {
+        assertFalse(solution.hasDuplicate(new int[]{1, 2, 3, 4}));
+    }
+
+    @Test
     void example1_hasDuplicate() {
         assertTrue(solution.hasDuplicate(new int[]{1, 2, 3, 1}));
     }

@@ -16,6 +16,16 @@ class ValidAnagramTest {
     }
 
     @Test
+    void neetcodeExample1_isAnagram() {
+        assertTrue(solution.isAnagram("racecar", "carrace"));
+    }
+
+    @Test
+    void neetcodeExample2_notAnagram() {
+        assertFalse(solution.isAnagram("jar", "jam"));
+    }
+
+    @Test
     void example1_isAnagram() {
         assertTrue(solution.isAnagram("anagram", "nagaram"));
     }
