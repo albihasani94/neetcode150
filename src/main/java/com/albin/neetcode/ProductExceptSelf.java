@@ -4,14 +4,18 @@ public class ProductExceptSelf {
 
     public int[] productExceptSelf(int[] nums) {
         int[] result = new int[nums.length];
-        for (int i = 0; i < nums.length; i++) {
-            int resultI = 1;
-            for (int j = 0; j < nums.length; j++) {
-                if (i == j) continue;
-                resultI *= nums[j];
-            }
-            result[i] = resultI;
+
+        result[0] = 1;
+        for (int i = 1; i < nums.length; i++) {
+            result[i] = result[i - 1] * nums[i - 1];
         }
+
+        int postfix = 1;
+        for (int i = nums.length - 1; i >= 0; i--) {
+            result[i] *= postfix;
+            postfix *= nums[i];
+        }
+
         return result;
     }
 }
