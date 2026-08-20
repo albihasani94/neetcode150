@@ -17,7 +17,7 @@ A work-in-progress collection of Java solutions and tests for the [NeetCode 150]
 | Arrays & Hashing | [Longest Consecutive Sequence](https://neetcode.io/problems/longest-consecutive-sequence/question?list=neetcode150) | [LongestConsecutiveSequence](src/main/java/com/albin/neetcode/LongestConsecutiveSequence.java) | Solved |
 | Two Pointers | [Valid Palindrome](https://neetcode.io/problems/is-palindrome/question?list=neetcode150) | [ValidPalindrome](src/main/java/com/albin/neetcode/ValidPalindrome.java) | Solved |
 | Two Pointers | [Two Integer Sum II](https://neetcode.io/problems/two-integer-sum-ii/question?list=neetcode150) | [TwoSumII](src/main/java/com/albin/neetcode/TwoSumII.java) | Solved |
-| Two Pointers | [3Sum](https://neetcode.io/problems/three-integer-sum/question?list=neetcode150) | [ThreeSum](src/main/java/com/albin/neetcode/ThreeSum.java) | In progress |
+| Two Pointers | [3Sum](https://neetcode.io/problems/three-integer-sum/question?list=neetcode150) | [ThreeSum](src/main/java/com/albin/neetcode/ThreeSum.java) | Solved |
 | Two Pointers | [Container With Most Water](https://neetcode.io/problems/max-water-container/question?list=neetcode150) | [ContainerWithMostWater](src/main/java/com/albin/neetcode/ContainerWithMostWater.java) | In progress |
 | Two Pointers | [Trapping Rain Water](https://neetcode.io/problems/trapping-rain-water/question?list=neetcode150) | [TrappingRainWater](src/main/java/com/albin/neetcode/TrappingRainWater.java) | In progress |
 | Sliding Window | [Best Time to Buy and Sell Stock](https://neetcode.io/problems/buy-and-sell-crypto/question?list=neetcode150) | [BestTimeToBuyAndSellStock](src/main/java/com/albin/neetcode/BestTimeToBuyAndSellStock.java) | In progress |
