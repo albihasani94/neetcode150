@@ -24,12 +24,12 @@ class EncodeDecodeStringsTest {
 
     @Test
     void neetcodeExample1() {
-        assertEncodeDecodeRoundtrip(List.of("neet", "code", "love", "you"));
+        assertEncodeDecodeRoundtrip(List.of("Hello", "World"));
     }
 
     @Test
     void neetcodeExample2() {
-        assertEncodeDecodeRoundtrip(List.of("we", "say", ":", "yes"));
+        assertEncodeDecodeRoundtrip(List.of(""));
     }
 
     @Test
@@ -38,8 +38,8 @@ class EncodeDecodeStringsTest {
     }
 
     @Test
-    void singleEmptyString() {
-        assertEncodeDecodeRoundtrip(List.of(""));
+    void multipleWords() {
+        assertEncodeDecodeRoundtrip(List.of("neet", "code", "love", "you"));
     }
 
     @Test

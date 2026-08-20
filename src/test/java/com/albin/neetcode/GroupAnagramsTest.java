@@ -3,12 +3,13 @@ package com.albin.neetcode;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.util.HashSet;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
-import java.util.Set;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class GroupAnagramsTest {
 
@@ -22,87 +23,76 @@ class GroupAnagramsTest {
     @Test
     void example1_groupsAnagrams() {
         String[] strs = {"act", "pots", "tops", "cat", "stop", "hat"};
-        List<List<String>> groups = solution.groupAnagrams(strs);
-        Set<Set<String>> normalized = normalize(groups);
-
-        assertEquals(3, normalized.size(), "There should be three anagram groups");
-        assertTrue(normalized.contains(group("act", "cat")));
-        assertTrue(normalized.contains(group("pots", "tops", "stop")));
-        assertTrue(normalized.contains(group("hat")));
+        assertGroupsEqual(
+                List.of(
+                        List.of("act", "cat"),
+                        List.of("pots", "tops", "stop"),
+                        List.of("hat")
+                ),
+                solution.groupAnagrams(strs)
+        );
     }
 
     @Test
     void leetcodeExample1() {
         String[] strs = {"eat", "tea", "tan", "ate", "nat", "bat"};
-        List<List<String>> groups = solution.groupAnagrams(strs);
-        Set<Set<String>> normalized = normalize(groups);
-
-        assertEquals(3, normalized.size());
-        assertTrue(normalized.contains(group("eat", "tea", "ate")));
-        assertTrue(normalized.contains(group("tan", "nat")));
-        assertTrue(normalized.contains(group("bat")));
+        assertGroupsEqual(
+                List.of(
+                        List.of("eat", "tea", "ate"),
+                        List.of("tan", "nat"),
+                        List.of("bat")
+                ),
+                solution.groupAnagrams(strs)
+        );
     }
 
     @Test
     void example2_singleString() {
         String[] strs = {"x"};
-        List<List<String>> groups = solution.groupAnagrams(strs);
-        Set<Set<String>> normalized = normalize(groups);
-
-        assertEquals(1, normalized.size(), "There should be one anagram group");
-        assertTrue(normalized.contains(group("x")));
+        assertGroupsEqual(List.of(List.of("x")), solution.groupAnagrams(strs));
     }
 
     @Test
     void example3_emptyString() {
         String[] strs = {""};
-        List<List<String>> groups = solution.groupAnagrams(strs);
-        Set<Set<String>> normalized = normalize(groups);
-
-        assertEquals(1, normalized.size(), "There should be one anagram group");
-        assertTrue(normalized.contains(group("")));
+        assertGroupsEqual(List.of(List.of("")), solution.groupAnagrams(strs));
     }
 
     @Test
     void singleStringHasNoAnagrams() {
         String[] strs = {"listen"};
-        List<List<String>> groups = solution.groupAnagrams(strs);
-        Set<Set<String>> normalized = normalize(groups);
-
-        assertEquals(1, normalized.size());
-        assertTrue(normalized.contains(group("listen")));
+        assertGroupsEqual(List.of(List.of("listen")), solution.groupAnagrams(strs));
     }
 
     @Test
     void allAnagramsGroupTogether() {
         String[] strs = {"eat", "tea", "ate"};
-        List<List<String>> groups = solution.groupAnagrams(strs);
-        Set<Set<String>> normalized = normalize(groups);
-
-        assertEquals(1, normalized.size(), "All three strings are anagrams of each other");
-        assertTrue(normalized.contains(group("eat", "tea", "ate")));
+        assertGroupsEqual(
+                List.of(List.of("eat", "tea", "ate")),
+                solution.groupAnagrams(strs)
+        );
     }
 
     @Test
     void duplicatesAreKeptWithinGroup() {
         String[] strs = {"bat", "tab", "bat"};
-        List<List<String>> groups = solution.groupAnagrams(strs);
-        Set<Set<String>> normalized = normalize(groups);
-
-        assertEquals(1, normalized.size());
-        assertTrue(normalized.contains(group("bat", "tab")));
-        assertEquals(3, groups.getFirst().size());
+        assertGroupsEqual(
+                List.of(List.of("bat", "tab", "bat")),
+                solution.groupAnagrams(strs)
+        );
     }
 
-    private static Set<Set<String>> normalize(List<List<String>> groups) {
-        Set<Set<String>> normalized = new HashSet<>();
-        for (List<String> group : groups) {
-            normalized.add(new HashSet<>(group));
-        }
-        return normalized;
+    private static void assertGroupsEqual(List<List<String>> expected, List<List<String>> actual) {
+        assertEquals(normalize(expected), normalize(actual));
     }
 
-    private static Set<String> group(String... words) {
-        return new HashSet<>(List.of(words));
+    private static Map<List<String>, Long> normalize(List<List<String>> groups) {
+        return groups.stream()
+                .map(group -> {
+                    List<String> sorted = new ArrayList<>(group);
+                    Collections.sort(sorted);
+                    return List.copyOf(sorted);
+                })
+                .collect(Collectors.groupingBy(group -> group, Collectors.counting()));
     }
 }

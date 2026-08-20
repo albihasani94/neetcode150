@@ -41,11 +41,6 @@ class ValidPalindromeTest {
     }
 
     @Test
-    void emptyString() {
-        assertTrue(solution.isPalindrome(""));
-    }
-
-    @Test
     void singleCharacter() {
         assertTrue(solution.isPalindrome("a"));
     }

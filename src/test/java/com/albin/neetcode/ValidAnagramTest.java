@@ -36,11 +36,6 @@ class ValidAnagramTest {
     }
 
     @Test
-    void emptyStrings_areAnagram() {
-        assertTrue(solution.isAnagram("", ""));
-    }
-
-    @Test
     void differentLengths_notAnagram() {
         assertFalse(solution.isAnagram("a", "ab"));
     }

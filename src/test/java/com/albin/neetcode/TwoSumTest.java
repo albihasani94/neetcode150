@@ -15,7 +15,7 @@ public class TwoSumTest {
         assertTrue(j >= 0 && j < nums.length, "Index 1 out of bounds");
         assertTrue(i != j, "Indices must be distinct");
         assertEquals(target, nums[i] + nums[j], "Values at returned indices must sum to target");
-        // Check the returned indices match the expected pair (order-independent)
+        // LeetCode permits the expected pair in either order.
         boolean match = (i == expectedIndices[0] && j == expectedIndices[1]) ||
                         (i == expectedIndices[1] && j == expectedIndices[0]);
         assertTrue(match, "Returned indices do not match expected pair");
