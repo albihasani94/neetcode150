@@ -1,38 +1,36 @@
 package com.albin.neetcode;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 public class LongestConsecutiveSequence {
 
     public int longestConsecutive(int[] nums) {
-        if (nums.length == 0) return 0;
-
-        Arrays.sort(nums);
-
-        int currentConsecutive = nums[0];
-        int maxConsecutive = 1;
-
-        List<Integer> consecutiveMaxCounts = new ArrayList<>();
-        consecutiveMaxCounts.add(maxConsecutive);
-
-        for (int i = 1; i < nums.length; i++) {
-            if (nums [i] == currentConsecutive) continue;
-
-            if (nums[i] == currentConsecutive + 1) {
-                maxConsecutive++;
-                if (i == nums.length - 1) {
-                    consecutiveMaxCounts.add(maxConsecutive);
-                }
-            } else {
-                consecutiveMaxCounts.add(maxConsecutive);
-                maxConsecutive = 1;
-            }
-            currentConsecutive = nums[i];
+        Set<Integer> numbers = new HashSet<>();
+        for (int number : nums) {
+            numbers.add(number); // eliminated duplicates
         }
 
-        return consecutiveMaxCounts.stream().max(Comparator.naturalOrder()).orElse(0);
+        int longest = 0;
+
+        for (int number : numbers) {
+            boolean hasPredecessor = numbers.contains(number - 1);
+
+            if (hasPredecessor) {
+                continue;
+            }
+
+            int current = number;
+            int length = 1;
+
+            while (numbers.contains(current + 1)) {
+                current++;
+                length++;
+            }
+
+            longest = Math.max(longest, length);
+        }
+
+        return longest;
     }
 }

@@ -57,6 +57,12 @@ class LongestConsecutiveSequenceTest {
     }
 
     @Test
+    void duplicateAtEndOfLongestSequence() {
+        int[] nums = {1, 2, 2};
+        assertEquals(2, solution.longestConsecutive(nums));
+    }
+
+    @Test
     void negativeNumbers() {
         int[] nums = {-5, -4, -3, -2, -1, 0, 1};
         assertEquals(7, solution.longestConsecutive(nums));
