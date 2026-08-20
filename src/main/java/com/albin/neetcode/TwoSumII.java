@@ -6,6 +6,21 @@ package com.albin.neetcode;
 public class TwoSumII {
 
     public int[] twoSum(int[] numbers, int target) {
+        int begin = 0;
+        int end = numbers.length - 1;
+
+        while (begin < end) {
+            int sum = numbers[begin] + numbers[end];
+            if (sum == target) {
+                return new int[]{begin + 1, end + 1};
+            }
+            if (sum > target) {
+                end--;
+            } else {
+                begin++;
+            }
+        }
+
         return new int[0];
     }
 }
