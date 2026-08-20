@@ -38,6 +38,16 @@ Run a single test class:
 mvn -Dtest=ProblemNameTest test
 ```
 
+### Automatic status updates
+
+Enable the repository's Git hooks once per clone:
+
+```sh
+git config core.hooksPath .githooks
+```
+
+When a staged solution or test class changes, the pre-commit hook runs its targeted tests. Passing in-progress problems are marked `Solved` in this README automatically, while test failures for solved problems block the commit. IntelliJ IDEA runs the hook when **Run Git hooks** is enabled in the commit settings.
+
 ## Project layout
 
 ```

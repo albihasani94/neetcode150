@@ -1,0 +1,138 @@
+#!/bin/sh
+
+set -u
+
+repository_root=$(git rev-parse --show-toplevel) || exit 1
+cd "$repository_root" || exit 1
+
+changed_problem_classes=$(
+    git diff --cached --name-only --diff-filter=ACMR -- \
+        'src/main/java/com/albin/neetcode/*.java' \
+        'src/test/java/com/albin/neetcode/*Test.java' |
+        sed -n \
+            -e 's#^src/main/java/com/albin/neetcode/\([^/]*\)\.java$#\1#p' \
+            -e 's#^src/test/java/com/albin/neetcode/\([^/]*\)Test\.java$#\1#p' |
+        sort -u
+)
+
+if [ -z "$changed_problem_classes" ]; then
+    exit 0
+fi
+
+if ! command -v mvn >/dev/null 2>&1; then
+    echo "pre-commit: Maven is required to verify changed problems." >&2
+    exit 1
+fi
+
+required_java_release=$(sed -n 's/.*<maven.compiler.release>\([0-9][0-9]*\)<\/maven.compiler.release>.*/\1/p' pom.xml | head -n 1)
+maven_java_release=$(mvn --version 2>/dev/null | sed -n 's/^Java version: \([0-9][0-9]*\).*/\1/p' | head -n 1)
+
+case "$required_java_release:$maven_java_release" in
+    *[!0-9:]*|:|*:)
+        echo "pre-commit: Could not determine the required or active Java version." >&2
+        exit 1
+        ;;
+esac
+
+if [ "$maven_java_release" -lt "$required_java_release" ]; then
+    echo "pre-commit: Maven is using Java ${maven_java_release}, but this project requires Java ${required_java_release}." >&2
+    echo "pre-commit: Ensure JAVA_HOME for the Git hook process points to Java ${required_java_release} or newer." >&2
+    exit 1
+fi
+
+readme_file="README.md"
+passed_classes_file=$(mktemp "${TMPDIR:-/tmp}/neetcode-passed.XXXXXX") || exit 1
+rewritten_readme=""
+
+cleanup() {
+    rm -f "$passed_classes_file"
+    if [ -n "$rewritten_readme" ] && [ -f "$rewritten_readme" ]; then
+        rm -f "$rewritten_readme"
+    fi
+}
+trap cleanup EXIT HUP INT TERM
+
+hook_failed=0
+
+for problem_class in $changed_problem_classes; do
+    solution_file="src/main/java/com/albin/neetcode/${problem_class}.java"
+    test_file="src/test/java/com/albin/neetcode/${problem_class}Test.java"
+
+    if [ ! -f "$solution_file" ] || [ ! -f "$test_file" ]; then
+        echo "pre-commit: Skipping ${problem_class}; both solution and test classes are required."
+        continue
+    fi
+
+    if [ ! -f "$readme_file" ] || ! grep -Fq "(${solution_file})" "$readme_file"; then
+        echo "pre-commit: ${problem_class} is missing from the README problem table." >&2
+        hook_failed=1
+        continue
+    fi
+
+    readme_row=$(grep -F "(${solution_file})" "$readme_file" | head -n 1)
+    case "$readme_row" in
+        *'| Solved |'*) current_status="Solved" ;;
+        *'| In progress |'*) current_status="In progress" ;;
+        *)
+            echo "pre-commit: ${problem_class} has an unrecognized README status." >&2
+            hook_failed=1
+            continue
+            ;;
+    esac
+
+    echo "pre-commit: Running ${problem_class}Test..."
+    if mvn -q -Dtest="${problem_class}Test" test; then
+        if [ "$current_status" = "In progress" ]; then
+            printf '%s\n' "$problem_class" >> "$passed_classes_file"
+        fi
+    elif [ "$current_status" = "Solved" ]; then
+        echo "pre-commit: ${problem_class} is marked Solved, but its tests failed." >&2
+        hook_failed=1
+    else
+        echo "pre-commit: ${problem_class} remains In progress because its tests failed."
+    fi
+done
+
+if [ "$hook_failed" -ne 0 ]; then
+    echo "pre-commit: Commit aborted. Fix the errors above or use --no-verify to bypass the hook." >&2
+    exit 1
+fi
+
+if [ ! -s "$passed_classes_file" ]; then
+    exit 0
+fi
+
+if ! git diff --quiet -- "$readme_file"; then
+    echo "pre-commit: Tests passed, but README.md has unstaged changes." >&2
+    echo "pre-commit: Stage or stash those changes before committing so status updates are not mixed in unexpectedly." >&2
+    exit 1
+fi
+
+while IFS= read -r problem_class; do
+    solution_file="src/main/java/com/albin/neetcode/${problem_class}.java"
+    rewritten_readme=$(mktemp "${TMPDIR:-/tmp}/neetcode-readme.XXXXXX") || exit 1
+
+    if ! awk -v solution_link="(${solution_file})" '
+        index($0, solution_link) {
+            sub(/\| In progress \|[[:space:]]*$/, "| Solved |")
+        }
+        { print }
+    ' "$readme_file" > "$rewritten_readme"; then
+        echo "pre-commit: Could not update ${problem_class} in README.md." >&2
+        exit 1
+    fi
+
+    if ! cp "$rewritten_readme" "$readme_file"; then
+        echo "pre-commit: Could not write the updated README.md." >&2
+        exit 1
+    fi
+    rm -f "$rewritten_readme"
+    rewritten_readme=""
+    echo "pre-commit: Marked ${problem_class} as Solved in README.md."
+done < "$passed_classes_file"
+
+if ! git add "$readme_file"; then
+    echo "pre-commit: Could not stage README.md." >&2
+    exit 1
+fi
+echo "pre-commit: Staged README.md status updates."
