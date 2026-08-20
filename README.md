@@ -1,6 +1,6 @@
 # NeetCode 150
 
-A work-in-progress collection of Java solutions and tests for the [NeetCode 150](https://neetcode.io/roadmap) problem set — a curated list of 150 LeetCode problems covering common interview patterns.
+A work-in-progress collection of Java solutions and tests for the [NeetCode 150](https://neetcode.io/roadmap) problem set — a curated list of 150 LeetCode problems.
 
 ## Problems
 
