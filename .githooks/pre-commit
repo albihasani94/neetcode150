@@ -9,19 +9,19 @@ set repository_root (git rev-parse --show-toplevel 2>/dev/null)
 test -n "$repository_root"; or die 'Not inside a Git repository.'
 cd "$repository_root"; or die 'Could not enter the repository root.'
 
-set changed_classes (git diff --cached --name-only --diff-filter=ACMR -- \
+set changed_problems (git diff --cached --name-only --diff-filter=ACMR -- \
         'src/main/java/com/albin/neetcode/*.java' \
         'src/test/java/com/albin/neetcode/*Test.java' |
     path basename -E | string replace -r 'Test$' '' | sort -u)
-set -q changed_classes[1]; or exit 0
+set -q changed_problems[1]; or exit 0
 
-set passed_classes
-for problem_class in $changed_classes
+set newly_solved_problems
+for problem_class in $changed_problems
     set solution_file "src/main/java/com/albin/neetcode/$problem_class.java"
     set test_class {$problem_class}Test
     set test_file "src/test/java/com/albin/neetcode/"{$test_class}".java"
 
-    # A solution skeleton may be committed before its matching test exists.
+    # Incomplete solution/test pairs are intentionally skipped.
     if not test -f "$solution_file"; or not test -f "$test_file"
         echo "pre-commit: Skipping $problem_class; both classes are required."
         continue
@@ -38,7 +38,7 @@ for problem_class in $changed_classes
     echo "pre-commit: Running $test_class..."
     if mvn -q -Dtest="$test_class" test
         if test "$readme_status" = 'In progress'
-            set -a passed_classes "$problem_class"
+            set -a newly_solved_problems "$problem_class"
         end
     else if test "$readme_status" = Solved
         die "$problem_class is marked Solved, but its tests failed."
@@ -48,20 +48,19 @@ for problem_class in $changed_classes
     end
 end
 
-set -q passed_classes[1]; or exit 0
+set -q newly_solved_problems[1]; or exit 0
 git diff --quiet -- README.md; or die \
     'README.md has unstaged changes; stage or stash them before committing.'
 
-set readme (string collect < README.md)
-for problem_class in $passed_classes
+set readme_contents (string collect < README.md)
+for problem_class in $newly_solved_problems
     set solution_file "src/main/java/com/albin/neetcode/$problem_class.java"
-    set escaped_solution (string escape --style=regex -- "$solution_file")
-    set readme (string replace -r \
-        "(?m)(\\($escaped_solution\\).*?)\\| In progress \\|\$" \
-        '$1| Solved |' -- "$readme" | string collect)
+    set readme_row (string split \n -- "$readme_contents" | string match -m 1 "*($solution_file)*")
+    set solved_row (string replace '| In progress |' '| Solved |' -- "$readme_row")
+    set readme_contents (string replace "$readme_row" "$solved_row" -- "$readme_contents" | string collect)
     echo "pre-commit: Marked $problem_class as Solved in README.md."
 end
 
-printf '%s\n' "$readme" >README.md; or die 'Could not write README.md.'
+printf '%s\n' "$readme_contents" >README.md; or die 'Could not write README.md.'
 git add README.md; or die 'Could not stage README.md.'
 echo 'pre-commit: Staged README.md status updates.'
