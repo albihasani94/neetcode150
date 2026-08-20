@@ -28,4 +28,5 @@ Do not invent requirements that are not stated by the problem. Match input types
 
 - Keep changes scoped to the requested problem.
 - Prefer clear, interview-style code that matches existing project style.
+- Add the canonical NeetCode 150 question link to each solution class's Javadoc and keep its row in the README problem table up to date.
 - After changes, run the smallest relevant test first, then `mvn test` when touching shared setup.

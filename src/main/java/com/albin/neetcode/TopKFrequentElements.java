@@ -4,6 +4,9 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * <a href="https://neetcode.io/problems/top-k-elements-in-list/question?list=neetcode150">NeetCode: Top K Frequent Elements</a>
+ */
 public class TopKFrequentElements {
     public int[] topKFrequent(int[] nums, int k) {
         Map<Integer, Integer> frequencies = new HashMap<>();

@@ -1,5 +1,8 @@
 package com.albin.neetcode;
 
+/**
+ * <a href="https://neetcode.io/problems/products-of-array-discluding-self/question?list=neetcode150">NeetCode: Products of Array Except Self</a>
+ */
 public class ProductExceptSelf {
 
     public int[] productExceptSelf(int[] nums) {

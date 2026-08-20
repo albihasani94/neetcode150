@@ -5,6 +5,9 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+/**
+ * <a href="https://neetcode.io/problems/valid-sudoku/question?list=neetcode150">NeetCode: Valid Sudoku</a>
+ */
 public class ValidSudoku {
 
     public boolean isValidSudoku(char[][] board) {

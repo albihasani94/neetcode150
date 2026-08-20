@@ -3,6 +3,9 @@ package com.albin.neetcode;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * <a href="https://neetcode.io/problems/string-encode-and-decode/question?list=neetcode150">NeetCode: Encode and Decode Strings</a>
+ */
 public class EncodeDecodeStrings {
 
     public String encode(List<String> strs) {

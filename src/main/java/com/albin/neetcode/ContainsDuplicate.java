@@ -3,6 +3,9 @@ package com.albin.neetcode;
 import java.util.HashSet;
 import java.util.Set;
 
+/**
+ * <a href="https://neetcode.io/problems/duplicate-integer/question?list=neetcode150">NeetCode: Contains Duplicate</a>
+ */
 public class ContainsDuplicate {
 
     public boolean hasDuplicate(int[] nums) {

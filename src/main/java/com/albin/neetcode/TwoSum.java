@@ -3,6 +3,9 @@ package com.albin.neetcode;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * <a href="https://neetcode.io/problems/two-integer-sum/question?list=neetcode150">NeetCode: Two Sum</a>
+ */
 public class TwoSum {
     public int[] twoSum(int[] nums, int target) {
         Map<Integer, Integer> facilitator = new HashMap<>();
