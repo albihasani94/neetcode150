@@ -18,15 +18,23 @@ When adding tests for a problem:
 
 Do not invent unstated requirements. Match the input types, output types, constraints, and ordering rules specified by NeetCode.
 
+## Problem lifecycle
+
+1. Add a compiling solution skeleton and mark the problem as `In progress` in the README.
+2. Add focused tests based on the NeetCode specification.
+3. Leave the solution implementation for the developer unless they explicitly ask for it.
+4. Run the targeted test class with `mvn -Dtest=ProblemNameTest test`.
+5. Mark the problem as `Solved` only after its targeted test class passes.
+
 ## Solution code
 
 - Solution implementations live under `src/main/java/com/albin/neetcode/`.
-- Do not replace the user's solution work unless they explicitly ask for a fix or implementation.
+- Do not replace the developer's solution work unless they explicitly ask for a fix or implementation.
 - When reviewing a solution, report findings without editing it unless asked.
 
 ## Conventions
 
 - Keep changes scoped to the requested problem.
 - Prefer clear, interview-style code that matches existing project style.
-- Add the canonical NeetCode 150 question link to each solution class's Javadoc and keep its row in the README problem table up to date, including links to its solution and test classes. Mark a problem as `Solved` only after its targeted test class passes.
+- Add the canonical NeetCode 150 question link to each solution class's Javadoc and keep its row in the README problem table up to date.
 - After changes, run the smallest relevant test first, then `mvn test` when touching shared setup.
