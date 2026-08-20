@@ -11,13 +11,12 @@ public class TwoSumII {
 
         while (begin < end) {
             int sum = numbers[begin] + numbers[end];
-            if (sum == target) {
-                return new int[]{begin + 1, end + 1};
-            }
             if (sum > target) {
                 end--;
-            } else {
+            } else if (sum < target) {
                 begin++;
+            } else {
+                return new int[]{begin + 1, end + 1};
             }
         }
 
