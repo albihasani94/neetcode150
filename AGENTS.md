@@ -26,6 +26,8 @@ Do not invent unstated requirements. Match the input types, output types, constr
 4. Run the targeted test class with `mvn -Dtest=ProblemNameTest test`.
 5. Mark the problem as `Solved` only after its targeted test class passes.
 
+The configured `.githooks/pre-commit` hook runs targeted tests for staged problem files and automatically changes passing problems from `In progress` to `Solved`. Because agents may not create commits—or the hook may not be enabled—verify and update the README status before finishing; treat the hook as a safety net.
+
 ## Solution code
 
 - Solution implementations live under `src/main/java/com/albin/neetcode/`.
