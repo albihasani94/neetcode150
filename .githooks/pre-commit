@@ -49,7 +49,7 @@ for problem_class in $changed_problems
 
     set readme_row (string match -m 1 "*($solution_file)*" < README.md)
     test -n "$readme_row"; or die "$problem_class is missing from the README table."
-    set readme_status (string match -r --groups-only '\| (☑|☐) \|' -- "$readme_row")
+    set readme_status (string match -r --groups-only '\| (✓|○) \|' -- "$readme_row")
     test -n "$readme_status"; or die "$problem_class has an invalid README status."
 
     set -a eligible_problems "$problem_class"
@@ -81,12 +81,12 @@ for problem_index in (seq (count $eligible_problems))
     set readme_status $readme_statuses[$problem_index]
 
     if test_report_passed "$test_class"
-        if test "$readme_status" = ☐
+        if test "$readme_status" = ○
             set -a newly_solved_problems "$problem_class"
         end
     else
         set test_failures_found true
-        if test "$readme_status" = ☑
+        if test "$readme_status" = ✓
             die "$problem_class is marked Solved, but its tests failed."
         end
 
@@ -110,7 +110,7 @@ set readme_contents (string collect < README.md)
 for problem_class in $newly_solved_problems
     set solution_file "src/main/java/com/albin/neetcode/$problem_class.java"
     set readme_row (string split \n -- "$readme_contents" | string match -m 1 "*($solution_file)*")
-    set solved_row (string replace '| ☐ |' '| ☑ |' -- "$readme_row")
+    set solved_row (string replace '| ○ |' '| ✓ |' -- "$readme_row")
     set readme_contents (string replace "$readme_row" "$solved_row" -- "$readme_contents" | string collect)
     echo "pre-commit: Marked $problem_class as Solved in README.md."
 end
