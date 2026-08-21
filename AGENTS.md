@@ -20,23 +20,25 @@ Do not invent unstated requirements. Match the input types, output types, constr
 
 ## Problem lifecycle
 
-1. Add a compiling solution skeleton and mark the problem as `In progress` in the README.
+1. Add a compiling solution skeleton. Problems already start as `In progress` in the README.
 2. Add focused tests based on the NeetCode specification.
-3. Leave the solution implementation for the developer unless they explicitly ask for it.
-4. Run the targeted test class with `mvn -Dtest=ProblemNameTest test`.
-5. Mark the problem as `Solved` only after its targeted test class passes.
+3. Leave the solution implementation for the developer unless they explicitly ask for an implementation, fix, or edit.
+4. Default to explaining the algorithm, identifying issues, and offering hints without modifying solution files.
+5. Do not add or modify tests unless the user explicitly asks for those changes, or the task is specifically to add tests. Do not change README problem statuses manually.
+6. Run the targeted test class with `mvn -Dtest=ProblemNameTest test`.
+7. Do not mark a problem as `Solved` manually; the pre-commit hook makes that change after its targeted test class passes during a commit.
 
-The configured `.githooks/pre-commit` hook runs targeted tests for staged problem files and automatically changes passing problems from `In progress` to `Solved`. Because agents may not create commits—or the hook may not be enabled—verify and update the README status before finishing; treat the hook as a safety net.
+The configured `.githooks/pre-commit` hook runs targeted tests for staged problem files, changes passing problems from `In progress` to `Solved`, and stages the README update. The hook is the only mechanism that changes problem statuses; do not update them manually when the hook has not run.
 
 ## Solution code
 
 - Solution implementations live under `src/main/java/com/albin/neetcode/`.
-- Do not replace the developer's solution work unless they explicitly ask for a fix or implementation.
-- When reviewing a solution, report findings without editing it unless asked.
+- Do not replace or modify the developer's solution work unless they explicitly ask for an implementation, fix, or edit.
+- When reviewing or debugging a solution, report findings and provide explanations or hints without editing it unless asked.
 
 ## Conventions
 
 - Keep changes scoped to the requested problem.
 - Prefer clear, interview-style code that matches existing project style.
-- Add the canonical NeetCode 150 question link to each solution class's Javadoc and keep its row in the README problem table up to date.
+- Add the canonical NeetCode 150 question link to each solution class's Javadoc. Leave README problem-status changes to the pre-commit hook.
 - After changes, run the smallest relevant test first, then `mvn test` when touching shared setup.
