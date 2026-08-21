@@ -5,10 +5,25 @@ function die
     exit 1
 end
 
+function test_report_passed --argument-names test_class
+    set report_file "target/surefire-reports/TEST-com.albin.neetcode.$test_class.xml"
+    test -f "$report_file"; or die \
+        "Maven did not produce a Surefire report for $test_class."
+
+    set report_summary (string match -r -m 1 '<testsuite[^>]*>' <"$report_file")
+    set report_failures (string match -r --groups-only ' failures="([0-9]+)"' -- "$report_summary")
+    set report_errors (string match -r --groups-only ' errors="([0-9]+)"' -- "$report_summary")
+    test -n "$report_failures"; and test -n "$report_errors"; or die \
+        "Could not read the Surefire result for $test_class."
+
+    test "$report_failures" -eq 0; and test "$report_errors" -eq 0
+end
+
 set repository_root (git rev-parse --show-toplevel 2>/dev/null)
 test -n "$repository_root"; or die 'Not inside a Git repository.'
 cd "$repository_root"; or die 'Could not enter the repository root.'
 
+# Collect and validate changed problems.
 set changed_problems (git diff --cached --name-only --diff-filter=ACMR -- \
         'src/main/java/com/albin/neetcode/*.java' \
         'src/test/java/com/albin/neetcode/*Test.java' |
@@ -44,6 +59,7 @@ end
 
 set -q eligible_problems[1]; or exit 0
 
+# Run all changed tests in one Maven invocation.
 # Remove only the reports that this run must recreate. Otherwise a Maven failure
 # before test execution could make a stale report look like a current result.
 for test_class in $test_classes
@@ -56,24 +72,15 @@ echo "pre-commit: Running "(count $test_classes)" changed test classes..."
 set maven_failed false
 mvn -q -Dtest="$test_filter" test; or set maven_failed true
 
+# Process each test class's result.
 set newly_solved_problems
 set test_failures_found false
 for problem_index in (seq (count $eligible_problems))
     set problem_class $eligible_problems[$problem_index]
     set test_class $test_classes[$problem_index]
     set readme_status $readme_statuses[$problem_index]
-    set report_file "target/surefire-reports/TEST-com.albin.neetcode.$test_class.xml"
 
-    test -f "$report_file"; or die \
-        "Maven did not produce a Surefire report for $test_class."
-
-    set report_summary (string match -r -m 1 '<testsuite[^>]*>' <"$report_file")
-    set report_failures (string match -r --groups-only ' failures="([0-9]+)"' -- "$report_summary")
-    set report_errors (string match -r --groups-only ' errors="([0-9]+)"' -- "$report_summary")
-    test -n "$report_failures"; and test -n "$report_errors"; or die \
-        "Could not read the Surefire result for $test_class."
-
-    if test "$report_failures" -eq 0; and test "$report_errors" -eq 0
+    if test_report_passed "$test_class"
         if test "$readme_status" = 'In progress'
             set -a newly_solved_problems "$problem_class"
         end
@@ -94,6 +101,7 @@ if test "$maven_failed" = true; and test "$test_failures_found" = false
     die 'Maven failed even though all changed test reports passed.'
 end
 
+# Update and stage README statuses for newly solved problems.
 set -q newly_solved_problems[1]; or exit 0
 git diff --quiet -- README.md; or die \
     'README.md has unstaged changes; stage or stash them before committing.'
