@@ -6,6 +6,8 @@ import java.util.Map;
 import java.util.Set;
 
 /**
+ * Category: Arrays & Hashing
+ *
  * <a href="https://neetcode.io/problems/valid-sudoku/question?list=neetcode150">NeetCode: Valid Sudoku</a>
  */
 public class ValidSudoku {

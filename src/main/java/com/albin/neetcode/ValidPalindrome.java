@@ -1,6 +1,8 @@
 package com.albin.neetcode;
 
 /**
+ * Category: Two Pointers
+ *
  * <a href="https://neetcode.io/problems/is-palindrome/question?list=neetcode150">NeetCode: Valid Palindrome</a>
  */
 public class ValidPalindrome {

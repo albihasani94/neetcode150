@@ -4,6 +4,8 @@ import java.util.HashSet;
 import java.util.Set;
 
 /**
+ * Category: Arrays & Hashing
+ *
  * <a href="https://neetcode.io/problems/longest-consecutive-sequence/question?list=neetcode150">NeetCode: Longest Consecutive Sequence</a>
  */
 public class LongestConsecutiveSequence {

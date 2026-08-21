@@ -1,6 +1,8 @@
 package com.albin.neetcode;
 
 /**
+ * Category: Two Pointers
+ *
  * <a href="https://neetcode.io/problems/trapping-rain-water/question?list=neetcode150">NeetCode: Trapping Rain Water</a>
  */
 public class TrappingRainWater {

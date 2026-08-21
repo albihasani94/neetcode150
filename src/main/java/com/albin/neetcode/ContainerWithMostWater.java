@@ -1,6 +1,8 @@
 package com.albin.neetcode;
 
 /**
+ * Category: Two Pointers
+ *
  * <a href="https://neetcode.io/problems/max-water-container/question?list=neetcode150">NeetCode: Container With Most Water</a>
  */
 public class ContainerWithMostWater {

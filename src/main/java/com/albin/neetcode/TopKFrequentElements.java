@@ -5,6 +5,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
+ * Category: Arrays & Hashing
+ *
  * <a href="https://neetcode.io/problems/top-k-elements-in-list/question?list=neetcode150">NeetCode: Top K Frequent Elements</a>
  */
 public class TopKFrequentElements {

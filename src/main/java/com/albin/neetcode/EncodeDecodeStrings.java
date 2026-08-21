@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * Category: Arrays & Hashing
+ *
  * <a href="https://neetcode.io/problems/string-encode-and-decode/question?list=neetcode150">NeetCode: Encode and Decode Strings</a>
  */
 public class EncodeDecodeStrings {

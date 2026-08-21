@@ -3,6 +3,8 @@ package com.albin.neetcode;
 import java.util.*;
 
 /**
+ * Category: Arrays & Hashing
+ *
  * <a href="https://neetcode.io/problems/anagram-groups/question?list=neetcode150">NeetCode: Group Anagrams</a>
  */
 public class GroupAnagrams {

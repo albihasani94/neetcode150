@@ -1,6 +1,8 @@
 package com.albin.neetcode;
 
 /**
+ * Category: Sliding Window
+ *
  * <a href="https://neetcode.io/problems/buy-and-sell-crypto/question?list=neetcode150">NeetCode: Best Time to Buy and Sell Stock</a>
  */
 public class BestTimeToBuyAndSellStock {

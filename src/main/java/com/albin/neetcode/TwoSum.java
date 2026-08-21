@@ -4,6 +4,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
+ * Category: Arrays & Hashing
+ *
  * <a href="https://neetcode.io/problems/two-integer-sum/question?list=neetcode150">NeetCode: Two Sum</a>
  */
 public class TwoSum {
