@@ -15,7 +15,9 @@ set changed_problems (git diff --cached --name-only --diff-filter=ACMR -- \
     path basename -E | string replace -r 'Test$' '' | sort -u)
 set -q changed_problems[1]; or exit 0
 
-set newly_solved_problems
+set eligible_problems
+set test_classes
+set readme_statuses
 for problem_class in $changed_problems
     set solution_file "src/main/java/com/albin/neetcode/$problem_class.java"
     set test_class {$problem_class}Test
@@ -35,17 +37,61 @@ for problem_class in $changed_problems
     set readme_status (string match -r --groups-only '\| (Solved|In progress) \|' -- "$readme_row")
     test -n "$readme_status"; or die "$problem_class has an invalid README status."
 
-    echo "pre-commit: Running $test_class..."
-    if mvn -q -Dtest="$test_class" test
+    set -a eligible_problems "$problem_class"
+    set -a test_classes "$test_class"
+    set -a readme_statuses "$readme_status"
+end
+
+set -q eligible_problems[1]; or exit 0
+
+# Remove only the reports that this run must recreate. Otherwise a Maven failure
+# before test execution could make a stale report look like a current result.
+for test_class in $test_classes
+    set report_file "target/surefire-reports/TEST-com.albin.neetcode.$test_class.xml"
+    command rm -f "$report_file"
+end
+
+set test_filter (string join , $test_classes)
+echo "pre-commit: Running "(count $test_classes)" changed test classes..."
+set maven_failed false
+mvn -q -Dtest="$test_filter" test; or set maven_failed true
+
+set newly_solved_problems
+set test_failures_found false
+for problem_index in (seq (count $eligible_problems))
+    set problem_class $eligible_problems[$problem_index]
+    set test_class $test_classes[$problem_index]
+    set readme_status $readme_statuses[$problem_index]
+    set report_file "target/surefire-reports/TEST-com.albin.neetcode.$test_class.xml"
+
+    test -f "$report_file"; or die \
+        "Maven did not produce a Surefire report for $test_class."
+
+    set report_summary (string match -r -m 1 '<testsuite[^>]*>' <"$report_file")
+    set report_failures (string match -r --groups-only ' failures="([0-9]+)"' -- "$report_summary")
+    set report_errors (string match -r --groups-only ' errors="([0-9]+)"' -- "$report_summary")
+    test -n "$report_failures"; and test -n "$report_errors"; or die \
+        "Could not read the Surefire result for $test_class."
+
+    if test "$report_failures" -eq 0; and test "$report_errors" -eq 0
         if test "$readme_status" = 'In progress'
             set -a newly_solved_problems "$problem_class"
         end
-    else if test "$readme_status" = Solved
-        die "$problem_class is marked Solved, but its tests failed."
     else
+        set test_failures_found true
+        if test "$readme_status" = Solved
+            die "$problem_class is marked Solved, but its tests failed."
+        end
+
         # Red tests are allowed while a problem remains in progress.
         echo "pre-commit: $problem_class remains In progress because its tests failed."
     end
+end
+
+# A nonzero Maven exit is expected when an in-progress test is red. If every
+# report passed, the failure came from somewhere else in the Maven lifecycle.
+if test "$maven_failed" = true; and test "$test_failures_found" = false
+    die 'Maven failed even though all changed test reports passed.'
 end
 
 set -q newly_solved_problems[1]; or exit 0
