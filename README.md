@@ -25,7 +25,7 @@ Status: ✓ Solved · ○ In progress
 | [Best Time to Buy and Sell Stock](https://neetcode.io/problems/buy-and-sell-crypto/question?list=neetcode150) | [BestTimeToBuyAndSellStock](src/main/java/com/albin/neetcode/BestTimeToBuyAndSellStock.java) | ✓ |
 | [Longest Substring Without Repeating Characters](https://neetcode.io/problems/longest-substring-without-duplicates/question?list=neetcode150) | [LongestSubstringWithoutRepeatingCharacters](src/main/java/com/albin/neetcode/LongestSubstringWithoutRepeatingCharacters.java) | ✓ |
 | [Longest Repeating Character Replacement](https://neetcode.io/problems/longest-repeating-substring-with-replacement/question?list=neetcode150) | [LongestRepeatingCharacterReplacement](src/main/java/com/albin/neetcode/LongestRepeatingCharacterReplacement.java) | ✓ |
-| [Permutation In String](https://neetcode.io/problems/permutation-string/question?list=neetcode150) | [PermutationInString](src/main/java/com/albin/neetcode/PermutationInString.java) | ○ |
+| [Permutation In String](https://neetcode.io/problems/permutation-string/question?list=neetcode150) | [PermutationInString](src/main/java/com/albin/neetcode/PermutationInString.java) | ✓ |
 | [Minimum Window Substring](https://neetcode.io/problems/minimum-window-with-characters/question?list=neetcode150) | [MinimumWindowSubstring](src/main/java/com/albin/neetcode/MinimumWindowSubstring.java) | ○ |
 | [Sliding Window Maximum](https://neetcode.io/problems/sliding-window-maximum/question?list=neetcode150) | [SlidingWindowMaximum](src/main/java/com/albin/neetcode/SlidingWindowMaximum.java) | ○ |
 | [Valid Parentheses](https://neetcode.io/problems/validate-parentheses/question?list=neetcode150) | [ValidParentheses](src/main/java/com/albin/neetcode/ValidParentheses.java) | ○ |
