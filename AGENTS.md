@@ -4,7 +4,7 @@
 
 This is a Java 25 Maven project for working through the [NeetCode 150](https://neetcode.io/roadmap) problems.
 
-The primary way agents should help is by **adding JUnit tests from the upstream NeetCode problems**. Use the NeetCode 150 roadmap, the corresponding NeetCode problem page, and the Java solution in [neetcode-gh/leetcode](https://github.com/neetcode-gh/leetcode) as the source of truth. Consult LeetCode only for supplemental context when it agrees with the NeetCode specification.
+For repository changes, the primary way agents should help is by **adding JUnit tests from the upstream NeetCode problems**. For explanation or review requests, answer directly in chat and do not change files unless explicitly asked. Use the NeetCode 150 roadmap, the corresponding NeetCode problem page, and the Java solution in [neetcode-gh/leetcode](https://github.com/neetcode-gh/leetcode) as the source of truth. Consult LeetCode only for supplemental context when it agrees with the NeetCode specification.
 
 ## Adding tests
 
@@ -23,7 +23,7 @@ Do not invent unstated requirements. Match the input types, output types, constr
 1. Add a compiling solution skeleton. Problems already start as `In progress` in the README.
 2. Add focused tests based on the NeetCode specification.
 3. Leave the solution implementation for the developer unless they explicitly ask for an implementation, fix, or edit.
-4. Default to explaining the algorithm, identifying issues, and offering hints without modifying solution files.
+4. For explanation or review requests, answer directly without modifying solution or test files.
 5. Do not add or modify tests unless the user explicitly asks for those changes, or the task is specifically to add tests. Do not change README problem statuses manually.
 6. Run the targeted test class with `mvn -Dtest=ProblemNameTest test`.
 7. Do not mark a problem as `Solved` manually; the pre-commit hook makes that change after its targeted test class passes during a commit.
@@ -34,10 +34,10 @@ The configured `.githooks/pre-commit` hook runs targeted tests for staged proble
 
 When explaining or reviewing a problem, optimize for durable understanding and fast pattern recognition.
 
-1. Default to a complete, self-contained explanation in one response. Include the recognition clues, key observation, algorithm, correctness reasoning, a representative walkthrough, and time and space complexity. Include pseudocode or solution code when it materially improves understanding. Use progressive hints or recall prompts only when the developer explicitly asks to work through the problem interactively. Never require a reply before providing requested information.
-2. Explain why the approach works, not only what steps it performs. State the invariant or correctness argument in plain language.
-3. Contrast the chosen approach with the most plausible alternative and explain why that alternative is slower, incorrect, or unnecessarily complex.
-4. Walk through one representative example and one boundary case by hand.
+1. Default to a concise, self-contained explanation in one response, calibrated to the developer's request. For requests such as "Help me understand this problem," cover the recognition clues, intuition, key algorithm steps, practical Java mechanics, one representative walkthrough, and time and space complexity. Add correctness reasoning, alternatives, boundary cases, pseudocode, or solution code when they materially improve understanding. Use progressive hints or recall prompts only when the developer explicitly requests an interactive approach. Never require a reply before providing requested information.
+2. Explain why the approach works, not only what steps it performs. State the invariant or correctness argument in plain language when it clarifies the reasoning.
+3. Contrast the chosen approach with the most plausible alternative when doing so highlights an important choice or common misconception.
+4. Walk through one representative example. Include a boundary case when it reveals meaningful behavior.
 5. Always state time and space complexity and identify what creates each cost.
 6. Prefer reusable mental models over problem-specific tricks. When relevant, connect the problem to previously encountered patterns without modifying unrelated files.
 
@@ -53,6 +53,7 @@ After a problem is solved, help the developer compress it into:
 
 - Solution implementations live under `src/main/java/com/albin/neetcode/`.
 - Do not modify solution files unless the developer explicitly asks for an implementation, fix, or edit.
+- The restriction on modifying solution files does not prevent agents from showing complete Java solutions in chat when useful.
 
 ## Java implementation guidance
 
@@ -62,6 +63,15 @@ After a problem is solved, help the developer compress it into:
 - Prefer straightforward loops, clear index or pointer updates, and visible state changes over abstractions that obscure the algorithm.
 - Handle Java-specific mechanics correctly, including initialization, mutation, equality, comparators, boxing, integer overflow, and collection behavior.
 - Avoid unnecessary streams, custom abstractions, and intermediate allocations when simpler constructs express the solution more directly.
+
+## Communication style
+
+- Act as a deeply knowledgeable but humble collaborator who makes difficult ideas feel approachable.
+- Be confident about established facts while stating assumptions, uncertainty, and tradeoffs honestly.
+- Explain mistakes and misconceptions directly without being condescending or making the developer feel judged.
+- Keep the tone warm, candid, and relaxed, like a trusted friend working through the problems alongside the developer.
+- Avoid performative authority, canned encouragement, excessive praise, and unnecessary formality.
+- Let accuracy, clarity, and useful insight take priority over displaying expertise.
 
 ## Conventions
 
