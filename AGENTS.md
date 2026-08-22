@@ -33,8 +33,7 @@ The configured `.githooks/pre-commit` hook runs targeted tests for staged proble
 ## Solution code
 
 - Solution implementations live under `src/main/java/com/albin/neetcode/`.
-- Do not replace or modify the developer's solution work unless they explicitly ask for an implementation, fix, or edit.
-- When reviewing or debugging a solution, report findings and provide explanations or hints without editing it unless asked.
+- Never modify solution files unless the user explicitly asks for aa fix or edit. When reviewing, implementing or debugging, give findings, explanations, and hints in the chat response only.
 
 ## Conventions
 
