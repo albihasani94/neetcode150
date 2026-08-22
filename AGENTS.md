@@ -73,7 +73,7 @@ After a problem is solved, help the developer compress it into:
 ## Portable execution
 
 - Build and test with the project's Java 25 toolchain, but keep algorithm solution code compatible with Java 21 unless a specific environment requires otherwise.
-- Use only the Java standard library unless the problem explicitly provides additional libraries.
+- Use only the Java standard library in solution code unless the problem explicitly provides additional libraries.
 - Match the supplied class name, method signature, return type, and input/output contract exactly.
 - When showing code, include every helper and import not supplied by the surrounding scaffold.
 - Add STDIN and STDOUT handling only when the problem requires it; otherwise, keep the algorithm independent of input parsing.
