@@ -183,7 +183,7 @@ Enable the repository's Git hooks once per clone:
 git config core.hooksPath .githooks
 ```
 
-The hook requires [Fish](https://fishshell.com/) to be available on `PATH`. When a staged solution or test class changes, it runs the targeted tests. Passing in-progress problems are marked `Solved` in this README automatically, while test failures for solved problems block the commit. IntelliJ IDEA runs the hook when **Run Git hooks** is enabled in the commit settings.
+The hook requires [Fish](https://fishshell.com/) to be available on `PATH`. When a staged solution or test class changes, it runs the targeted tests. Passing in-progress problems are marked `Solved` in this README automatically only when the corresponding solution is staged, while test failures for solved problems block the commit. IntelliJ IDEA runs the hook when **Run Git hooks** is enabled in the commit settings.
 
 ## Project layout
 

@@ -77,11 +77,14 @@ set newly_solved_problems
 set test_failures_found false
 for problem_index in (seq (count $eligible_problems))
     set problem_class $eligible_problems[$problem_index]
+    set solution_file "src/main/java/com/albin/neetcode/$problem_class.java"
     set test_class $test_classes[$problem_index]
     set readme_status $readme_statuses[$problem_index]
 
     if test_report_passed "$test_class"
-        if test "$readme_status" = ○
+        # A test-only commit may validate a problem, but it must not claim that
+        # the corresponding solution is included in the commit being made.
+        if test "$readme_status" = ○; and not git diff --cached --quiet -- "$solution_file"
             set -a newly_solved_problems "$problem_class"
         end
     else
