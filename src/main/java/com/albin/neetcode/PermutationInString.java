@@ -26,7 +26,7 @@ public class PermutationInString {
                 window[s2.charAt(i - s1.length()) - 'a']--;
             }
 
-            if (Arrays.equals(frequencies, window)) {
+            if (i >= s1.length() - 1 && Arrays.equals(frequencies, window)) {
                 return true;
             }
         }
