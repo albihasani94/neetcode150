@@ -143,6 +143,13 @@ Empty categories are the remaining gaps. Final wording belongs to the developer.
 - **Cost:** O(|s| + |t|) — both pointers only move forward; O(|t|) for the two maps
 - **Trap:** ticking `have` on total matched characters instead of distinct satisfied ones; with duplicates in t that overcounts and the shrink loop corrupts the answer
 
+### SlidingWindowMaximum
+- **Clue:** maximum of every fixed-size window under linear-time constraints → keep only candidates in a monotonic decreasing deque
+- **Invariant:** deque indices stay inside the window and their values decrease front-to-back, so the front is the maximum; an older value no larger than the new one can never win again and is discarded instead of rescanned
+- **Minimal:** allocate `n - k + 1` results; for each right index, evict front indices `<= right - k`, pop back values `<= nums[right]`, append right, then emit the front once the window is full
+- **Cost:** O(n) time because every index is appended and removed at most once; O(k) space for at most one window's candidate indices
+- **Trap:** the number of windows is `n - k + 1`, not `n / k + 1`; the windows overlap rather than partitioning the array
+
 ## Stack
 
 ## Binary Search

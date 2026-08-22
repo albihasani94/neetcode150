@@ -27,7 +27,7 @@ Status: ✓ Solved · ○ In progress
 | [Longest Repeating Character Replacement](https://neetcode.io/problems/longest-repeating-substring-with-replacement/question?list=neetcode150) | [LongestRepeatingCharacterReplacement](src/main/java/com/albin/neetcode/LongestRepeatingCharacterReplacement.java) | ✓ |
 | [Permutation In String](https://neetcode.io/problems/permutation-string/question?list=neetcode150) | [PermutationInString](src/main/java/com/albin/neetcode/PermutationInString.java) | ✓ |
 | [Minimum Window Substring](https://neetcode.io/problems/minimum-window-with-characters/question?list=neetcode150) | [MinimumWindowSubstring](src/main/java/com/albin/neetcode/MinimumWindowSubstring.java) | ✓ |
-| [Sliding Window Maximum](https://neetcode.io/problems/sliding-window-maximum/question?list=neetcode150) | [SlidingWindowMaximum](src/main/java/com/albin/neetcode/SlidingWindowMaximum.java) | ○ |
+| [Sliding Window Maximum](https://neetcode.io/problems/sliding-window-maximum/question?list=neetcode150) | [SlidingWindowMaximum](src/main/java/com/albin/neetcode/SlidingWindowMaximum.java) | ✓ |
 | [Valid Parentheses](https://neetcode.io/problems/validate-parentheses/question?list=neetcode150) | [ValidParentheses](src/main/java/com/albin/neetcode/ValidParentheses.java) | ○ |
 | [Min Stack](https://neetcode.io/problems/minimum-stack/question?list=neetcode150) | [MinStack](src/main/java/com/albin/neetcode/MinStack.java) | ○ |
 | [Evaluate Reverse Polish Notation](https://neetcode.io/problems/evaluate-reverse-polish-notation/question?list=neetcode150) | [EvaluateReversePolishNotation](src/main/java/com/albin/neetcode/EvaluateReversePolishNotation.java) | ○ |
