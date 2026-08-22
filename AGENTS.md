@@ -30,6 +30,13 @@ Do not invent unstated requirements. Match the input types, output types, constr
 
 The configured `.githooks/pre-commit` hook runs targeted tests for staged problem files, changes passing problems from `In progress` to `Solved`, and stages the README update. The hook is the only mechanism that changes problem statuses; do not update them manually when the hook has not run.
 
+## Constraint-driven reasoning
+
+- Use the input constraints to derive the required time and space complexity before choosing an algorithm.
+- Explicitly connect those constraints to why simpler approaches will or will not scale.
+- When a problem is a variation of an established pattern, identify the familiar pattern briefly and focus most of the explanation on what changed.
+- When reviewing an attempted solution, begin with the smallest failing input and the precise invariant, operation, or assumption responsible. Preserve the existing approach when it is repairable.
+
 ## Learning guidance
 
 When explaining or reviewing a problem, optimize for durable understanding and fast pattern recognition.
@@ -57,12 +64,21 @@ After a problem is solved, help the developer compress it into:
 
 ## Java implementation guidance
 
-- Write all solution code in Java 25 unless the developer requests otherwise.
 - Translate algorithms into practical, idiomatic Java using appropriate standard data structures and explicit control flow.
 - Choose arrays, lists, maps, sets, deques, heaps, and other structures according to the operations and complexity the algorithm requires.
 - Prefer straightforward loops, clear index or pointer updates, and visible state changes over abstractions that obscure the algorithm.
 - Handle Java-specific mechanics correctly, including initialization, mutation, equality, comparators, boxing, integer overflow, and collection behavior.
 - Avoid unnecessary streams, custom abstractions, and intermediate allocations when simpler constructs express the solution more directly.
+
+## Portable execution
+
+- Build and test with the project's Java 25 toolchain, but keep algorithm solution code compatible with Java 21 unless a specific environment requires otherwise.
+- Use only the Java standard library unless the problem explicitly provides additional libraries.
+- Match the supplied class name, method signature, return type, and input/output contract exactly.
+- When showing code, include every helper and import not supplied by the surrounding scaffold.
+- Add STDIN and STDOUT handling only when the problem requires it; otherwise, keep the algorithm independent of input parsing.
+- Call out risks from recursion depth, integer overflow, comparator overflow, excessive allocation, and unintended quadratic behavior when constraints make them relevant.
+- Identify the small set of edge cases most likely to expose correctness or performance errors without inventing requirements.
 
 ## Communication style
 
