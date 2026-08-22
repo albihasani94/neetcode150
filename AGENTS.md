@@ -95,3 +95,4 @@ After a problem is solved, help the developer compress it into:
 - Prefer clear, conventional code with minimal incidental complexity that matches existing project style.
 - Add the canonical NeetCode 150 question link to each solution class's Javadoc. Leave README problem-status changes to the pre-commit hook.
 - After changes, run the smallest relevant test first, then `mvn test` when touching shared setup.
+- `NOTES.md` compression entries are drafted only through the `compress` skill (`~/.agents/skills/compress/SKILL.md`), which owns the five-bullet format. Final wording belongs to the developer.
