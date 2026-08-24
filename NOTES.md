@@ -161,7 +161,12 @@ Empty categories are the remaining gaps. Final wording belongs to the developer.
 
 ## Binary Search
 
-## Linked List
+### BinarySearch
+- **Clue:** a sorted array plus a target lookup — the ordering is what lets each comparison discard half the remaining elements, demanding O(log n)
+- **Invariant:** if the target exists, it lies in the closed interval [low, high]; every update discards a half provably incapable of containing it, and an empty interval (low > high) proves absence
+- **Minimal:** `while (low <= high)` with `mid = low + (high - low) / 2`; move `low = mid + 1` or `high = mid - 1` on mismatch, `return mid` on match, `return -1` after the loop
+- **Cost:** O(log n) time because the interval halves each iteration; O(1) space for three index variables
+- **Trap:** the "not found" return belongs after the loop, not inside it — only the exhausted interval proves absence, and a stray early return turns the search into a single midpoint check
 
 ## Trees
 
