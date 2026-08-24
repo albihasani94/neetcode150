@@ -6,6 +6,8 @@ A work-in-progress collection of Java solutions and tests for the [NeetCode 150]
 
 Status: ✓ Solved · ○ In progress
 
+Progress: [████░░░░░░░░░░░░░░░░░░░░░░░░░░░░] 21/150 (14%)
+
 | NeetCode problem | Solution | Status |
 | --- | --- | :---: |
 | [Contains Duplicate](https://neetcode.io/problems/duplicate-integer/question?list=neetcode150) | [ContainsDuplicate](src/main/java/com/albin/neetcode/ContainsDuplicate.java) | ✓ |

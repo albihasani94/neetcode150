@@ -118,6 +118,19 @@ for problem_class in $newly_solved_problems
     echo "pre-commit: Marked $problem_class as Solved in README.md."
 end
 
+# Refresh the progress bar to match the updated statuses.
+set solved_count (count (string split \n -- "$readme_contents" | string match '*| ✓ |*'))
+set total_rows (count (string split \n -- "$readme_contents" | string match '*| ○ |*'))
+set total_rows (math $solved_count + $total_rows)
+if test $total_rows -gt 0
+    set percent (math --scale=0 "100 * $solved_count / $total_rows")
+    set filled (math --scale=0 "30 * $solved_count / $total_rows")
+    set empty (math 30 - $filled)
+    set bar (string repeat -n $filled '█')(string repeat -n $empty '░')
+    set progress_line "Progress: [$bar] $solved_count/$total_rows ($percent%)"
+    set readme_contents (string replace -r '(?m)^Progress: .*$' "$progress_line" -- "$readme_contents" | string collect)
+end
+
 printf '%s\n' "$readme_contents" >README.md; or die 'Could not write README.md.'
 git add README.md; or die 'Could not stage README.md.'
 echo 'pre-commit: Staged README.md status updates.'
