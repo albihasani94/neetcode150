@@ -5,6 +5,27 @@ function die
     exit 1
 end
 
+function progress_bar_line --argument-names readme_contents
+    set solved_count (count (string match -a -r '\| ✓ \|' -- "$readme_contents"))
+    set total_count (count (string match -a -r '\| [✓○] \|' -- "$readme_contents"))
+    test "$total_count" -gt 0; or return 0
+
+    set bar_width 30
+    set filled_count (math --scale=0 "$bar_width * $solved_count / $total_count")
+    set percent (math --scale=0 "100 * $solved_count / $total_count")
+    echo "**Progress:** "(string repeat -n $filled_count █)\
+        (string repeat -n (math "$bar_width - $filled_count") ░)\
+        " $solved_count/$total_count ($percent%)"
+end
+
+function update_progress_bar --argument-names readme_contents
+    set new_line (progress_bar_line "$readme_contents")
+    test -n "$new_line"; or return 0
+
+    string replace -r '\*\*Progress:\*\* .*' -- "$new_line" -- \
+        "$readme_contents" | string collect
+end
+
 function test_report_passed --argument-names test_class
     set report_file "target/surefire-reports/TEST-com.albin.neetcode.$test_class.xml"
     test -f "$report_file"; or die \
@@ -117,6 +138,9 @@ for problem_class in $newly_solved_problems
     set readme_contents (string replace "$readme_row" "$solved_row" -- "$readme_contents" | string collect)
     echo "pre-commit: Marked $problem_class as Solved in README.md."
 end
+
+# Keep the progress bar in sync with the updated statuses.
+set readme_contents (update_progress_bar "$readme_contents")
 
 printf '%s\n' "$readme_contents" >README.md; or die 'Could not write README.md.'
 git add README.md; or die 'Could not stage README.md.'

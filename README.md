@@ -4,6 +4,8 @@ A work-in-progress collection of Java solutions and tests for the [NeetCode 150]
 
 ## Problems
 
+**Progress:** ████░░░░░░░░░░░░░░░░░░░░░░░░░░ 21/150 (14%)
+
 Status: ✓ Solved · ○ In progress
 
 | NeetCode problem | Solution | Status |
