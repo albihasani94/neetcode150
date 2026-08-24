@@ -34,7 +34,7 @@ Status: ✓ Solved · ○ In progress
 | [Daily Temperatures](https://neetcode.io/problems/daily-temperatures/question?list=neetcode150) | [DailyTemperatures](src/main/java/com/albin/neetcode/DailyTemperatures.java) | ○ |
 | [Car Fleet](https://neetcode.io/problems/car-fleet/question?list=neetcode150) | [CarFleet](src/main/java/com/albin/neetcode/CarFleet.java) | ○ |
 | [Largest Rectangle In Histogram](https://neetcode.io/problems/largest-rectangle-in-histogram/question?list=neetcode150) | [LargestRectangleInHistogram](src/main/java/com/albin/neetcode/LargestRectangleInHistogram.java) | ○ |
-| [Binary Search](https://neetcode.io/problems/binary-search/question?list=neetcode150) | [BinarySearch](src/main/java/com/albin/neetcode/BinarySearch.java) | ○ |
+| [Binary Search](https://neetcode.io/problems/binary-search/question?list=neetcode150) | [BinarySearch](src/main/java/com/albin/neetcode/BinarySearch.java) | ✓ |
 | [Search a 2D Matrix](https://neetcode.io/problems/search-2d-matrix/question?list=neetcode150) | [SearchA2DMatrix](src/main/java/com/albin/neetcode/SearchA2DMatrix.java) | ○ |
 | [Koko Eating Bananas](https://neetcode.io/problems/eating-bananas/question?list=neetcode150) | [KokoEatingBananas](src/main/java/com/albin/neetcode/KokoEatingBananas.java) | ○ |
 | [Find Minimum In Rotated Sorted Array](https://neetcode.io/problems/find-minimum-in-rotated-sorted-array/question?list=neetcode150) | [FindMinimumInRotatedSortedArray](src/main/java/com/albin/neetcode/FindMinimumInRotatedSortedArray.java) | ○ |
