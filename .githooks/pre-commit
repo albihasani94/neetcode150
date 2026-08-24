@@ -19,6 +19,28 @@ function test_report_passed --argument-names test_class
     test "$report_failures" -eq 0; and test "$report_errors" -eq 0
 end
 
+function update_readme_progress --argument-names readme_contents
+    set problem_rows (string split \n -- "$readme_contents" |
+        string match -r '^\| .+ \| (?:✓|○) \|$')
+    set solved_rows (string match -r '^\| .+ \| ✓ \|$' -- $problem_rows)
+    set total_count (count $problem_rows)
+    set solved_count (count $solved_rows)
+    test "$total_count" -gt 0; or die 'Could not find problem rows in README.md.'
+
+    set bar_width 20
+    set filled_count (math --scale=0 "$solved_count * $bar_width / $total_count + 0.5")
+    set empty_count (math "$bar_width - $filled_count")
+    set percentage (math --scale=0 "$solved_count * 100 / $total_count + 0.5")
+    set filled_bar (string repeat -n "$filled_count" '█')
+    set empty_bar (string repeat -n "$empty_count" '░')
+    set progress_row (string split \n -- "$readme_contents" |
+        string match -r -m 1 '^Progress: \[[█░]+\] \*\*[0-9]+ / [0-9]+ solved \([0-9]+%\)\*\*$')
+    test -n "$progress_row"; or die 'Could not find the progress indicator in README.md.'
+
+    set updated_progress "Progress: [$filled_bar$empty_bar] **$solved_count / $total_count solved ($percentage%)**"
+    string replace "$progress_row" "$updated_progress" -- "$readme_contents" | string collect
+end
+
 set repository_root (git rev-parse --show-toplevel 2>/dev/null)
 test -n "$repository_root"; or die 'Not inside a Git repository.'
 cd "$repository_root"; or die 'Could not enter the repository root.'
@@ -117,6 +139,8 @@ for problem_class in $newly_solved_problems
     set readme_contents (string replace "$readme_row" "$solved_row" -- "$readme_contents" | string collect)
     echo "pre-commit: Marked $problem_class as Solved in README.md."
 end
+
+set readme_contents (update_readme_progress "$readme_contents")
 
 printf '%s\n' "$readme_contents" >README.md; or die 'Could not write README.md.'
 git add README.md; or die 'Could not stage README.md.'
