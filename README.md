@@ -2,7 +2,7 @@
 
 A work-in-progress collection of Java solutions and tests for the [NeetCode 150](https://neetcode.io/roadmap) problem set — a curated list of 150 LeetCode problems.
 
-Progress: [███░░░░░░░░░░░░░░░░░] **21 / 150 solved (14%)**
+![NeetCode 150 progress](progress.svg)
 
 ## Problems
 

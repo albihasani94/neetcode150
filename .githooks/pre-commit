@@ -19,7 +19,7 @@ function test_report_passed --argument-names test_class
     test "$report_failures" -eq 0; and test "$report_errors" -eq 0
 end
 
-function update_readme_progress --argument-names readme_contents
+function update_progress_svg --argument-names readme_contents
     set problem_rows (string split \n -- "$readme_contents" |
         string match -r '^\| .+ \| (?:✓|○) \|$')
     set solved_rows (string match -r '^\| .+ \| ✓ \|$' -- $problem_rows)
@@ -27,18 +27,24 @@ function update_readme_progress --argument-names readme_contents
     set solved_count (count $solved_rows)
     test "$total_count" -gt 0; or die 'Could not find problem rows in README.md.'
 
-    set bar_width 20
-    set filled_count (math --scale=0 "$solved_count * $bar_width / $total_count + 0.5")
-    set empty_count (math "$bar_width - $filled_count")
+    set track_width 624
+    set filled_width (math --scale=0 "$solved_count * $track_width / $total_count + 0.5")
     set percentage (math --scale=0 "$solved_count * 100 / $total_count + 0.5")
-    set filled_bar (string repeat -n "$filled_count" '█')
-    set empty_bar (string repeat -n "$empty_count" '░')
-    set progress_row (string split \n -- "$readme_contents" |
-        string match -r -m 1 '^Progress: \[[█░]+\] \*\*[0-9]+ / [0-9]+ solved \([0-9]+%\)\*\*$')
-    test -n "$progress_row"; or die 'Could not find the progress indicator in README.md.'
 
-    set updated_progress "Progress: [$filled_bar$empty_bar] **$solved_count / $total_count solved ($percentage%)**"
-    string replace "$progress_row" "$updated_progress" -- "$readme_contents" | string collect
+    printf '%s\n' \
+        '<svg xmlns="http://www.w3.org/2000/svg" width="640" height="64" viewBox="0 0 640 64" role="img" aria-labelledby="title description">' \
+        "  <title id=\"title\">NeetCode 150 progress: $solved_count of $total_count solved</title>" \
+        "  <desc id=\"description\">$percentage percent complete</desc>" \
+        '  <defs>' \
+        '    <linearGradient id="progress-gradient" x1="0" x2="1">' \
+        '      <stop offset="0%" stop-color="#238636"/>' \
+        '      <stop offset="100%" stop-color="#2ea043"/>' \
+        '    </linearGradient>' \
+        '  </defs>' \
+        '  <rect x="8" y="12" width="624" height="40" rx="20" fill="#30363d"/>' \
+        "  <rect x=\"8\" y=\"12\" width=\"$filled_width\" height=\"40\" rx=\"20\" fill=\"url(#progress-gradient)\"/>" \
+        "  <text x=\"320\" y=\"33\" fill=\"#ffffff\" font-family=\"-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif\" font-size=\"15\" font-weight=\"600\" text-anchor=\"middle\" dominant-baseline=\"middle\">$solved_count / $total_count solved · $percentage%</text>" \
+        '</svg>' >progress.svg
 end
 
 set repository_root (git rev-parse --show-toplevel 2>/dev/null)
@@ -128,8 +134,8 @@ end
 
 # Update and stage README statuses for newly solved problems.
 set -q newly_solved_problems[1]; or exit 0
-git diff --quiet -- README.md; or die \
-    'README.md has unstaged changes; stage or stash them before committing.'
+git diff --quiet -- README.md progress.svg; or die \
+    'README.md or progress.svg has unstaged changes; stage or stash them before committing.'
 
 set readme_contents (string collect < README.md)
 for problem_class in $newly_solved_problems
@@ -140,8 +146,8 @@ for problem_class in $newly_solved_problems
     echo "pre-commit: Marked $problem_class as Solved in README.md."
 end
 
-set readme_contents (update_readme_progress "$readme_contents")
+update_progress_svg "$readme_contents"; or die 'Could not update progress.svg.'
 
 printf '%s\n' "$readme_contents" >README.md; or die 'Could not write README.md.'
-git add README.md; or die 'Could not stage README.md.'
-echo 'pre-commit: Staged README.md status updates.'
+git add README.md progress.svg; or die 'Could not stage README.md and progress.svg.'
+echo 'pre-commit: Staged README.md status and progress updates.'
