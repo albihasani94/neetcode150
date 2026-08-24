@@ -1,5 +1,8 @@
 package com.albin.neetcode;
 
+import java.util.ArrayDeque;
+import java.util.Deque;
+
 /**
  * Category: Stack
  *
@@ -8,6 +11,21 @@ package com.albin.neetcode;
 public class ValidParentheses {
 
     public boolean isValid(String s) {
-        return false;
+        Deque<Character> stack = new ArrayDeque<>();
+
+        for (var ch : s.toCharArray()) {
+            switch (ch) {
+                case '(' -> stack.push(')');
+                case '{' -> stack.push('}');
+                case '[' -> stack.push(']');
+                default -> {
+                    if (stack.isEmpty() || stack.pop() != ch) {
+                        return false;
+                    }
+                }
+            }
+        }
+
+        return stack.isEmpty();
     }
 }

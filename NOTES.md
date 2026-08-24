@@ -152,6 +152,13 @@ Empty categories are the remaining gaps. Final wording belongs to the developer.
 
 ## Stack
 
+### ValidParentheses
+- **Clue:** nested brackets must close in reverse order — the most recent unmatched opener must be handled first, which signals a stack
+- **Invariant:** the stack holds the closing brackets still expected, with the next required one on top; each closer is checked once instead of repeatedly removing matched pairs
+- **Minimal:** push the matching closer for every opener; for a closer, reject if the stack is empty or its top differs; after the scan, require an empty stack
+- **Cost:** O(n) time because each character is pushed or popped once; O(n) space for a string containing only opening brackets
+- **Trap:** the in-loop empty check catches an unexpected closer and prevents `pop()` from failing; the final empty check catches openers that were never closed
+
 ## Binary Search
 
 ## Linked List
