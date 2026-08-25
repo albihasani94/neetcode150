@@ -168,6 +168,15 @@ Empty categories are the remaining gaps. Final wording belongs to the developer.
 - **Cost:** O(log n) time because the interval halves each iteration; O(1) space for three index variables
 - **Trap:** the "not found" return belongs after the loop, not inside it — only the exhausted interval proves absence, and a stray early return turns the search into a single midpoint check
 
+## Linked List
+
+### LRUCache
+- **Clue:** key-value lookup plus eviction by recent use, with both `get` and `put` required in O(1) average time → combine a hash map with a doubly linked list
+- **Invariant:** the map points each key to its one list node, while `left.next` is LRU and `right.prev` is MRU; direct node access and pointer rewiring avoid the naive O(n) search for the oldest entry
+- **Minimal:** use two sentinel nodes; on every hit, unlink the node and insert it before `right`; on a new key, insert there too, then remove `left.next` if capacity is exceeded
+- **Cost:** O(1) average time per `get` and `put` from one hash lookup plus constant pointer updates; O(capacity) space for the map and linked nodes
+- **Trap:** when reusing an existing node in `put`, update its `value` as well as moving it to MRU; moving it alone preserves the stale value
+
 ## Trees
 
 ## Tries

@@ -49,7 +49,7 @@ Status: ✓ Solved · ○ In progress
 | [Copy List With Random Pointer](https://neetcode.io/problems/copy-linked-list-with-random-pointer/question?list=neetcode150) | [CopyListWithRandomPointer](src/main/java/com/albin/neetcode/CopyListWithRandomPointer.java) | ○ |
 | [Add Two Numbers](https://neetcode.io/problems/add-two-numbers/question?list=neetcode150) | [AddTwoNumbers](src/main/java/com/albin/neetcode/AddTwoNumbers.java) | ○ |
 | [Find The Duplicate Number](https://neetcode.io/problems/find-duplicate-integer/question?list=neetcode150) | [FindTheDuplicateNumber](src/main/java/com/albin/neetcode/FindTheDuplicateNumber.java) | ○ |
-| [LRU Cache](https://neetcode.io/problems/lru-cache/question?list=neetcode150) | [LRUCache](src/main/java/com/albin/neetcode/LRUCache.java) | ○ |
+| [LRU Cache](https://neetcode.io/problems/lru-cache/question?list=neetcode150) | [LRUCache](src/main/java/com/albin/neetcode/LRUCache.java) | ✓ |
 | [Merge K Sorted Lists](https://neetcode.io/problems/merge-k-sorted-linked-lists/question?list=neetcode150) | [MergeKSortedLists](src/main/java/com/albin/neetcode/MergeKSortedLists.java) | ○ |
 | [Reverse Nodes In K Group](https://neetcode.io/problems/reverse-nodes-in-k-group/question?list=neetcode150) | [ReverseNodesInKGroup](src/main/java/com/albin/neetcode/ReverseNodesInKGroup.java) | ○ |
 | [Invert Binary Tree](https://neetcode.io/problems/invert-a-binary-tree/question?list=neetcode150) | [InvertBinaryTree](src/main/java/com/albin/neetcode/InvertBinaryTree.java) | ○ |
