@@ -47,14 +47,21 @@ Build the card in the following reasoning order:
 1. **Rebuild chain:** one line connecting problem clues to required complexity, operations, data structures, invariant, and pseudocode.
 2. **Recognition:** identify the decisive wording and constraints, the complexity they require, and why the plausible naive approach cannot meet them.
 3. **State and invariant:** name what each data structure or variable represents and state the property that remains true after every operation.
-4. **Structure drawing:** when relationships, ownership, ordering, boundaries, or pointer structure are materially easier to understand visually, use one compact Mermaid diagram. Use an ASCII diagram instead when it communicates the state more clearly; omit the drawing when neither adds reconstruction value.
-5. **Operation flow:** use a Mermaid flowchart or state diagram to show meaningful branches and state transitions. Omit it when the algorithm has no meaningful branching or transition sequence.
+4. **Structure drawing:** when relationships, ownership, ordering, boundaries, or pointer structure are materially easier to understand visually, use one compact Mermaid diagram. Use an ASCII diagram instead when it communicates the state more clearly. When Mermaid and ASCII cannot express necessary spatial layout or annotations clearly, create a self-contained SVG at `recall/assets/{ProblemName}.svg` and embed it with a relative Markdown image link. Omit the drawing when none adds reconstruction value.
+5. **Operation flow:** use a Mermaid flowchart or state diagram to show meaningful branches and state transitions. An SVG may replace it only when those transitions require spatial or annotated detail that Mermaid cannot communicate clearly. Omit it when the algorithm has no meaningful branching or transition sequence.
 6. **Reconstruction recipe:** derive minimal language-neutral steps from the invariant. Do not copy or transliterate the Java implementation.
 7. **Worked transition:** trace one representative example and one boundary only when the boundary changes or clarifies behavior.
 8. **Recall drill:** add a short set of prompts that can rebuild the algorithm without exposing the answer in the question. Put answers inside Markdown `<details>` blocks.
 9. **Trap and cost:** preserve the developer's actual stumble when known; state time and space complexity and what creates each cost.
 
 Use only diagrams that materially help reconstruct the algorithm. Label semantic roles such as `LRU`, `MRU`, `window start`, or `visited`, not incidental variable names alone. A reader should be able to cover the recipe and derive it by following recognition → invariant → transitions.
+
+Mermaid and ASCII remain the defaults. When an SVG is necessary:
+
+- Keep it static and self-contained with a `viewBox`, an accessible `<title>` and useful `<desc>`, an explicit background, and sufficient text and color contrast.
+- Use semantic labels and a descriptive Markdown alt text. Link it as `![description](assets/{ProblemName}.svg)` from the card.
+- Do not include scripts, event handlers, `foreignObject`, embedded raster images, external styles, fonts, or network references.
+- Create only the SVGs required by the card. If more than one is genuinely necessary, suffix the additional filenames by purpose, such as `recall/assets/{ProblemName}-transition.svg`.
 
 Keep the artifact concise enough to review in a few minutes. Do not change solution files, tests, `README.md`, or `NOTES.md`. Final wording belongs to the developer.
 
@@ -64,7 +71,8 @@ After creating or revising a card:
 
 1. Read the saved artifact back and confirm its path uses the resolved solution class, its problem link matches the `README.md` entry, and its reasoning progresses from recognition through invariant and any meaningful transitions to a language-neutral recipe and cost.
 2. Check that every included diagram is necessary, semantically labeled, and syntactically valid. Render Mermaid with an available renderer when practical; otherwise inspect the fence and syntax directly and disclose that it was not rendered.
-3. Confirm that the invocation changed only its authorized `recall/{ProblemName}.md` files and did not overwrite unrelated existing work. Treat a failed check as an error for that card and report it rather than claiming successful creation.
+3. For each SVG, confirm that the card's relative link resolves, the XML is well-formed, the required accessibility and containment rules are present, and no prohibited dynamic or external content exists. Render and visually inspect it with an available SVG renderer when practical; otherwise inspect the markup directly and disclose that it was not rendered.
+4. Confirm that the invocation changed only its authorized `recall/{ProblemName}.md` files and any SVG assets those cards require under `recall/assets/`, and did not overwrite unrelated existing work. Treat a failed check as an error for that card and report it rather than claiming successful creation.
 
 ## Batch-card mode
 
@@ -77,7 +85,7 @@ Treat each problem independently:
 - Do not let one failed or ambiguous target discard cards already created for other targets.
 - Do not silently refresh an existing card during a batch.
 
-Finish with a summary of cards created, skipped because they already existed, skipped as ineligible, and skipped because of verification errors or missing inputs. A batch invocation authorizes only the reconstruction artifacts; preserve the same prohibition on editing solutions, tests, `README.md`, and `NOTES.md`.
+Finish with a summary of cards created, optional SVG assets created, cards skipped because they already existed, cards skipped as ineligible, and cards skipped because of verification errors or missing inputs. A batch invocation authorizes only the reconstruction cards and their necessary SVG assets under `recall/`; preserve the same prohibition on editing solutions, tests, `README.md`, and `NOTES.md`.
 
 ## Drill mode
 
