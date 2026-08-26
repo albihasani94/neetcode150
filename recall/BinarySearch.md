@@ -19,10 +19,11 @@ Target lookup in sorted distinct values + O(log n) → keep a closed candidate i
 - `low > high` means no candidate index remains and is the only proof of absence.
 
 ```text
-[-1, 0, 2, 4, 6, 8]   target = 4
-  L        M        H   2 is too small → L = M + 1
-           [4, 6, 8]
-            M       H   found
+target = 4
+
+[0..5]  mid=2, value=2  → discard indices [0..2]
+[3..5]  mid=4, value=6  → discard indices [4..5]
+[3..3]  mid=3, value=4  → found
 ```
 
 ## Reconstruction recipe

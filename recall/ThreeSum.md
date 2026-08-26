@@ -21,14 +21,15 @@ All distinct zero-sum triplets + `n` up to 3,000 → O(n³) is too costly → so
 ```mermaid
 flowchart TD
     A["Choose next distinct anchor"] --> P["left = anchor + 1; right = end"]
-    P --> C{"anchor + left + right"}
+    P --> W{"left < right?"}
+    W -->|No| N["next distinct anchor"]
+    W -->|Yes| C{"sign of anchor + left + right"}
     C -->|negative| L["move left rightward"]
     C -->|positive| R["move right leftward"]
     C -->|zero| H["record triplet; move both; skip repeats"]
-    L --> C
-    R --> C
-    H --> C
-    C -->|pointers meet| N["next distinct anchor"]
+    L --> W
+    R --> W
+    H --> W
 ```
 
 ## Reconstruction recipe

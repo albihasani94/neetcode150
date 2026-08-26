@@ -18,12 +18,7 @@ Water at a bar is `min(maxLeft, maxRight) - height` → avoid two auxiliary max 
 - If `leftMax ≤ rightMax`, the right side already supplies a wall at least as high as `leftMax`, so the next left position's water is decided by `leftMax` alone.
 - Symmetrically, a smaller `rightMax` fixes the next right position.
 
-```text
-left processed       unresolved       right processed
-      leftMax  →  [ . . . . . ]  ←  rightMax
-
-smaller boundary max decides which side can be finalized next
-```
+![Two-pointer water-level reconstruction for heights 4, 2, 0, 3, 2, and 5](assets/TrappingRainWater.svg)
 
 ## Reconstruction recipe
 

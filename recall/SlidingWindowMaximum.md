@@ -20,11 +20,16 @@ Maximum for every overlapping width-`k` window + linear target → rescanning ea
 - A candidate removed from the back is no larger than a newer value, so it can never become maximum before that newer value expires.
 
 ```text
-window values:  [ 4, 2, 6 ]
-deque indices:        [6]
-deque values:         [6]      front = maximum
+window indices:  [ 4, 5, 6 ]
+window values:   [ 4, 2, 6 ]
 
-Both 4 and 2 are dominated by the newer 6 and can never win again.
+before index 6 enters:
+deque indices:  front → [4, 5] ← back
+deque values:           [4, 2]
+
+index 6 (value 6) dominates both back candidates:
+deque indices:  front → [6] ← back
+deque values:           [6]       maximum = 6
 ```
 
 ## Reconstruction recipe
