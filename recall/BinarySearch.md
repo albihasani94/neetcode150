@@ -51,12 +51,21 @@ Its index remains inside the current closed interval after every justified half-
 
 </details>
 
-### Why is `mid = low + (high - low) / 2` preferred?
+### How do you compute the midpoint safely?
 
 <details>
 <summary>Reveal</summary>
 
-It avoids overflow from directly adding large endpoint indices.
+Use `mid = low + (high - low) / 2`. It avoids overflow from directly adding large endpoint indices.
+
+</details>
+
+### Rebuild the full algorithm and justify its costs.
+
+<details>
+<summary>Reveal</summary>
+
+Initialize low and high to cover the closed array interval. While low <= high, compute low + (high - low) / 2; return on equality, otherwise exclude the midpoint and the impossible half. An existing target remains in the interval. Return -1 only when empty. Halving gives O(log n) time and O(1) space.
 
 </details>
 

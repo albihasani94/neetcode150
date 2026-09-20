@@ -33,21 +33,30 @@ Boundary: an empty or one-element input finishes without a failed insertion, so 
 
 ## Recall drill
 
-### Why is a set enough state?
+### What information about earlier elements is necessary, and how would you store it?
 
 <details>
 <summary>Reveal</summary>
 
-Only prior presence matters; counts and indices do not affect the boolean answer.
+Only prior presence matters; a hash set stores it with average O(1) membership and insertion. Counts and indices do not affect the boolean answer.
 
 </details>
 
-### What does a failed insertion prove?
+### What observation lets you stop before reaching the end?
 
 <details>
 <summary>Reveal</summary>
 
-The same value occurred at an earlier index because the set contains exactly the processed prefix's distinct values.
+A failed insertion proves that the same value occurred at an earlier index because the set contains exactly the processed prefix's distinct values.
+
+</details>
+
+### Rebuild the full algorithm and justify its costs.
+
+<details>
+<summary>Reveal</summary>
+
+Start an empty hash set and scan once. Before each value, the set contains exactly the earlier distinct values; a failed insertion proves a duplicate, so return true. Return false after the scan. Average O(1) set operations give O(n) time; storing distinct values takes O(n) space.
 
 </details>
 

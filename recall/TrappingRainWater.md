@@ -15,7 +15,7 @@ Water at a bar is `min(maxLeft, maxRight) - height` → avoid two auxiliary max 
 ## State and invariant
 
 - `leftMax` and `rightMax` are the tallest walls seen from their respective ends.
-- If `leftMax ≤ rightMax`, the right side already supplies a wall at least as high as `leftMax`, so the next left position's water is decided by `leftMax` alone.
+- If `leftMax ≤ rightMax`, the right side already supplies a wall at least as high as `leftMax`. The next left bar traps `leftMax - height` if it is lower; a taller bar raises `leftMax` and traps zero.
 - Symmetrically, a smaller `rightMax` fixes the next right position.
 
 ![Two-pointer water-level reconstruction for heights 4, 2, 0, 3, 2, and 5](assets/TrappingRainWater.svg)
@@ -32,16 +32,16 @@ Water at a bar is `min(maxLeft, maxRight) - height` → avoid two auxiliary max 
 
 In `[4,2,0,3,2,5]`, left maximum `4` is bounded by right maximum `5`, so left-side positions finalize as `2`, `4`, `1`, and `2` units, totaling `9`.
 
-Boundary: a monotonic or flat elevation never has a bar below a confirmed enclosing level, so the accumulated water remains zero.
+Boundary: in `[1,3,2]`, the initial maxima are `1` and `2`, so advance left onto height `3`. Update `leftMax` to `3` before adding `3 - 3 = 0`; adding with the old maximum would incorrectly contribute `1 - 3 = -2`. The total remains zero.
 
 ## Recall drill
 
-### Why can the smaller side be finalized without knowing the interior's future maximum?
+### Which position can you finalize next using only the known boundaries, and why?
 
 <details>
 <summary>Reveal</summary>
 
-The opposite side already has a boundary at least as high, so the smaller known maximum is the limiting water level.
+Advance the side with the smaller known maximum; either side works on a tie. The opposite boundary is already high enough to enclose water up to that maximum. A lower new bar traps the difference; a taller one raises the maximum and contributes zero.
 
 </details>
 
@@ -51,6 +51,15 @@ The opposite side already has a boundary at least as high, so the smaller known 
 <summary>Reveal</summary>
 
 Advance, update that side's maximum with the new height, then add `maximum - height` so the contribution cannot be negative.
+
+</details>
+
+### Rebuild the full algorithm and justify its costs.
+
+<details>
+<summary>Reveal</summary>
+
+Initialize endpoint pointers and their maxima. While the pointers differ, advance the side with the smaller maximum, choosing either on a tie. Update that maximum before adding maximum minus height. The opposite boundary certifies the contribution, or a new maximum contributes zero. Each position is processed once, giving O(n) time and O(1) space.
 
 </details>
 

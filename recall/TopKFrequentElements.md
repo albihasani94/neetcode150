@@ -9,7 +9,7 @@ Top `k` by frequency + answer unique → count first → order distinct `(value,
 ## Recognition
 
 - **Decisive clue:** selection depends on aggregate frequency, so raw values must first be reduced to `(value, count)` pairs.
-- **Current selection strategy:** sorting all `m` distinct entries costs O(m log m), acceptable at the local problem scale and simple to reconstruct.
+- **Current selection strategy:** sorting all `m` distinct entries costs O(m log m), acceptable with at most 10,000 input elements. NeetCode recommends O(n), but also accepts this sorting approach.
 - **Linear alternative:** because no frequency exceeds `n`, bucket values by frequency and scan from `n` downward; a size-`k` min-heap is another O(n + m log k) option.
 
 ## State and invariant
@@ -40,26 +40,35 @@ Boundary: when `k` equals the number of distinct values, taking the sorted prefi
 
 ## Recall drill
 
-### Why does taking a prefix of the sorted entries work?
+### What property must separate the selected values from the unselected ones?
 
 <details>
 <summary>Reveal</summary>
 
-Descending order guarantees that no unselected entry is more frequent than a selected one.
+No unselected value may be more frequent than a selected one. Taking the first k entries after sorting by descending frequency guarantees this.
 
 </details>
 
-### When would a heap be the better reconstruction?
+### If k is small, how could you reduce selection work without ordering every distinct value?
 
 <details>
 <summary>Reveal</summary>
 
-When `k` is small or `n + 1` buckets are undesirable; retain only the best `k` counted entries.
+Use a size-k min-heap of counted entries, evicting the least frequent when it grows too large. Selection takes O(m log k) for m distinct values and retains only the best k entries.
+
+</details>
+
+### Rebuild the full algorithm and justify its costs.
+
+<details>
+<summary>Reveal</summary>
+
+Count values in a hash map, sort distinct entries by descending frequency, and return the first k keys. The map preserves exact counts; after sorting, no unselected entry outranks a selected one. Counting n inputs and sorting m entries costs O(n + m log m) time and O(m) auxiliary space.
 
 </details>
 
 ## Trap and cost
 
-- **Trap:** subtraction-based comparators can overflow in a sorting/heap variant; compare counts safely.
+- **Trap:** the recorded comparator concern is a useful general habit: prefer `Integer.compare` to subtraction for arbitrary integers. Here counts lie between 1 and 10,000, so their difference cannot overflow; the essential detail is descending frequency order.
 - **Time:** O(n + m log m), where `m` is the number of distinct values; counting is linear and sorting dominates selection.
 - **Space:** O(m) for the frequency map and entry ordering, apart from the returned array.

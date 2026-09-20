@@ -19,11 +19,13 @@ Lossless round trip + payload may contain any character → no delimiter is intr
 - After consuming a frame, one original string has been recovered exactly and the cursor points at the next header.
 
 ```text
-encoded:  5#Hello0#4#4#hi
-          └frame 1┘│ └frame 3┘
-                   └ frame 2: empty payload
+encoded: 5#Hello0#4#4#hi
 
-header tells the decoder how many characters belong to the payload,
+frames:  5#Hello | 0# | 4#4#hi
+payload: Hello   | "" | 4#hi
+
+The vertical bars and surrounding spaces show frame boundaries only;
+they are not encoded. Each header gives its payload's character count,
 so `#` and digits inside a payload have no special meaning.
 ```
 
@@ -42,21 +44,30 @@ Boundary: an empty list encodes to the empty string, while one empty string enco
 
 ## Recall drill
 
-### Why does escaping a delimiter create extra complexity?
+### How can decoding find boundaries when every chosen separator may also occur in the data?
 
 <details>
 <summary>Reveal</summary>
 
-The escape character can itself occur and must also be escaped; length framing avoids interpreting payload characters entirely.
+Prefix each payload with its length and a header separator, then consume exactly that length. Escaping is another option, but the escape character must itself be escaped; length framing avoids interpreting payload characters.
 
 </details>
 
-### What is the decoder cursor invariant?
+### After recovering one string, where must decoding resume?
 
 <details>
 <summary>Reveal</summary>
 
 Before each iteration it points at a length header; after slicing that payload it points at the next header or the end.
+
+</details>
+
+### Rebuild the full algorithm and justify its costs.
+
+<details>
+<summary>Reveal</summary>
+
+Encode each string as its length, a header separator, and the payload. Decode by parsing a header, consuming exactly that many characters, and resuming at the next header or end. This cursor invariant preserves arbitrary payload contents. Both directions take O(N) time for encoded size N and O(N + number of strings) output space.
 
 </details>
 

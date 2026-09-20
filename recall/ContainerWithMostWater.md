@@ -33,12 +33,12 @@ Boundary: with exactly two bars, the initial pair is the only container and is e
 
 ## Recall drill
 
-### Why is moving the taller wall unjustified?
+### Which endpoint can you discard, and what rules out every remaining pair using it?
 
 <details>
 <summary>Reveal</summary>
 
-The shorter wall still caps height while width decreases, so keeping the shorter wall cannot improve the current area.
+Discard a shortest wall. Keeping it caps the height while every other remaining partner decreases the width, so none of those pairs can improve the current area.
 
 </details>
 
@@ -48,6 +48,15 @@ The shorter wall still caps height while width decreases, so keeping the shorter
 <summary>Reveal</summary>
 
 The area formula and shrinking width prove that the limiting endpoint has already achieved its maximum possible width.
+
+</details>
+
+### Rebuild the full algorithm and justify its costs.
+
+<details>
+<summary>Reveal</summary>
+
+Begin at the outer walls with best area zero. Measure width times the shorter height, update best, then discard a shortest endpoint; either works on a tie. All remaining pairs using that endpoint are bounded by an area already seen. Repeat until the pointers meet: O(n) time and O(1) space.
 
 </details>
 

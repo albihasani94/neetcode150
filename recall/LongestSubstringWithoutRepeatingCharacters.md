@@ -36,13 +36,13 @@ flowchart TD
 
 ## Worked transition
 
-For `zxyzxyz`, the window grows to `zxy`. The next `z` collides, so remove the old `z` and advance left; the repaired window `xyz` still has length `3`.
+For `dvdf`, the window grows to `dv`. The next `d` collides: remove only the old `d`, retain `v`, and add the new `d` to obtain `vd`. Adding `f` then gives `vdf`, length `3`. Clearing the whole window at the collision would lose `v` and finish with a best length of only `2`.
 
 Boundary: an empty string never opens a window and returns `0`; repeated one-character input keeps repairing to length `1`.
 
 ## Recall drill
 
-### Why shrink instead of clearing the whole set?
+### When a repeated character arrives, what part of the current substring can you keep?
 
 <details>
 <summary>Reveal</summary>
@@ -57,6 +57,15 @@ Only the prefix through the previous copy of the entering character is invalid; 
 <summary>Reveal</summary>
 
 The left boundary never moves backward, so its total number of advances is at most n.
+
+</details>
+
+### Rebuild the full algorithm and justify its costs.
+
+<details>
+<summary>Reveal</summary>
+
+Start an empty set, left at zero, and best at zero. For each entering character, remove from the left until its earlier copy is gone; then insert it and record the length. The set exactly represents a distinct window. Each character enters and leaves at most once: O(n) time and O(k) space for distinct window characters.
 
 </details>
 

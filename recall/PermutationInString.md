@@ -40,21 +40,30 @@ Boundary: if `|s1| > |s2|`, no full candidate window exists.
 
 ## Recall drill
 
-### Why is the window length fixed?
+### Which substrings could possibly be permutations of the pattern?
 
 <details>
 <summary>Reveal</summary>
 
-A permutation contains exactly the same number of characters as the original string.
+Only substrings with exactly the pattern's length: a permutation preserves both the number of characters and their multiplicities.
 
 </details>
 
-### What two updates move the window in O(1) state-change time?
+### What state changes as you move to the next candidate substring?
 
 <details>
 <summary>Reveal</summary>
 
 Increment the entering character's count and decrement the character leaving from the opposite boundary.
+
+</details>
+
+### Rebuild the full algorithm and justify its costs.
+
+<details>
+<summary>Reveal</summary>
+
+Reject a longer pattern, then count its letters and slide a window of the same length across the searched string. Add entering counts, subtract exiting counts, and compare vectors only for full windows. Equality proves a permutation. Counting the pattern and comparing 26 slots per window takes O(|s2|) time after the length guard and O(1) counter space.
 
 </details>
 

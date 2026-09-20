@@ -21,8 +21,8 @@ Palindrome ignoring case and non-alphanumerics → compare the filtered sequence
 ## Reconstruction recipe
 
 1. Place one pointer at each end of the string.
-2. While they have not crossed, advance the left pointer past non-alphanumerics and retreat the right pointer past them.
-3. Compare the two relevant characters case-insensitively; reject on mismatch.
+2. While `left < right`, skip non-alphanumerics from each end; check `left < right` before every character access in both skip loops.
+3. If the pointers meet, accept; otherwise compare the two relevant characters case-insensitively and reject on mismatch.
 4. Move both inward after a match; accept when the interval is exhausted.
 
 ## Worked transition
@@ -42,12 +42,21 @@ Only characters not yet classified as irrelevant or proven to match their mirror
 
 </details>
 
-### Why must skip loops check pointer overlap?
+### What stops the scan safely when the remaining characters are all punctuation?
 
 <details>
 <summary>Reveal</summary>
 
-One pointer can consume the remaining interval when it contains only ignored characters; continuing past the other pointer risks invalid access.
+Check `left < right` before every character access in both skip loops. One pointer can consume the remaining interval; when the pointers meet, accept without searching beyond it.
+
+</details>
+
+### Rebuild the full algorithm and justify its costs.
+
+<details>
+<summary>Reveal</summary>
+
+Start at both ends. While left < right, skip irrelevant characters with an overlap guard on every access; if the pointers meet, accept. Otherwise compare lowercase forms, reject a mismatch, and move inward. Everything outside the interval is ignored or matched. Monotonic movement gives O(n) time and O(1) space.
 
 </details>
 

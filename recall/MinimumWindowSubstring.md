@@ -10,7 +10,7 @@ Shortest substring covering all target multiplicities + up to 100,000 characters
 
 - **Decisive clues:** “substring” requires contiguity, “shortest” requires contracting valid candidates, and duplicates in the target require counts rather than membership.
 - **Constraint pressure:** enumerating or revalidating all substrings is quadratic; two monotonic boundaries make the scan linear.
-- **Validity summary:** track how many distinct required characters currently meet their exact required count.
+- **Validity summary:** track how many distinct required characters currently meet or exceed their required count.
 
 ## State and invariant
 
@@ -47,16 +47,27 @@ flowchart TD
 
 For `s = OUZODYXAZV`, `t = XYZ`, expansion first satisfies all three at `OUZODYX`. Shrinking removes irrelevant prefix characters until `ZODYX`; later expansion and contraction finds the shorter valid window `YXAZ`.
 
-Boundary: for target `AAB`, a window with one `A` and one `B` is not valid; `have` counts satisfied distinct requirements, not merely present letters.
+Boundary with duplicates: for `s = AAAB`, `t = AAB`, the requirements are `A:2, B:1`, so `required = 2`.
+
+| Transition | Window counts | `have` | Effect |
+|---|---|---|---|
+| First `A` enters | A:1 | 0 | A still below need |
+| Second `A` enters | A:2 | 1 | A reaches need |
+| Third `A` enters | A:3 | 1 | Surplus A adds no requirement |
+| `B` enters | A:3, B:1 | 2 | Save valid `AAAB` |
+| First `A` leaves | A:2, B:1 | 2 | Still valid; save shorter `AAB` |
+| Second `A` leaves | A:1, B:1 | 1 | A falls below need; stop shrinking |
+
+Return the saved `AAB`, not the invalid remaining `AB`.
 
 ## Recall drill
 
-### Why does `required` count distinct target characters rather than target length?
+### How can you summarize whether all target multiplicities are covered without rescanning the counts?
 
 <details>
 <summary>Reveal</summary>
 
-Each distinct character contributes one requirement whose multiplicity is stored in `need`; satisfaction is tracked once per requirement.
+Track one satisfied requirement per distinct target character, with multiplicities stored in `need`. The window is valid when the satisfied count equals the number of distinct target characters.
 
 </details>
 
@@ -66,6 +77,15 @@ Each distinct character contributes one requirement whose multiplicity is stored
 <summary>Reveal</summary>
 
 Increase when a count reaches its requirement; decrease when removal makes it fall below the requirement.
+
+</details>
+
+### Rebuild the full algorithm and justify its costs.
+
+<details>
+<summary>Reveal</summary>
+
+Count target multiplicities and track satisfied distinct requirements. Expand right until all are met; while valid, save shorter bounds and remove from the left, decreasing satisfaction only when a count falls below need. Return the saved slice or empty if none. Both boundaries advance monotonically: O(|s| + |t|) time and O(k) counting state for k distinct target characters.
 
 </details>
 

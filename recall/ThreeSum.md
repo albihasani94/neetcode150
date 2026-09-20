@@ -20,10 +20,12 @@ All distinct zero-sum triplets + `n` up to 3,000 → O(n³) is too costly → so
 
 ```mermaid
 flowchart TD
-    A["Choose next distinct anchor"] --> P["left = anchor + 1; right = end"]
+    A["Choose next distinct anchor index"] --> Q{"Anchor exists with value at most zero?"}
+    Q -->|No| Done["Return collected triplets"]
+    Q -->|Yes| P["left = anchor + 1; right = last index"]
     P --> W{"left < right?"}
-    W -->|No| N["next distinct anchor"]
-    W -->|Yes| C{"sign of anchor + left + right"}
+    W -->|No| A
+    W -->|Yes| C{"sign of sum of values at anchor, left, right"}
     C -->|negative| L["move left rightward"]
     C -->|positive| R["move right leftward"]
     C -->|zero| H["record triplet; move both; skip repeats"]
@@ -48,12 +50,12 @@ Boundary: `[0,0,0,0]` records `[0,0,0]` once, then duplicate skipping exhausts t
 
 ## Recall drill
 
-### What known subproblem remains after fixing one value?
+### How can you reduce triplet search to a familiar problem?
 
 <details>
 <summary>Reveal</summary>
 
-Find two values in a sorted suffix whose sum is the negation of the anchor.
+Sort, fix one anchor, then find two values in its sorted suffix whose sum is the negation of that anchor. This is the sorted two-sum pattern.
 
 </details>
 
@@ -63,6 +65,15 @@ Find two values in a sorted suffix whose sum is the negation of the anchor.
 <summary>Reveal</summary>
 
 At the anchor level and after recording an inner pair; otherwise equivalent value choices emit the same triplet.
+
+</details>
+
+### Rebuild the full algorithm and justify its costs.
+
+<details>
+<summary>Reveal</summary>
+
+Sort, visit each distinct nonpositive anchor, and solve sorted two-sum on its suffix. Move the appropriate endpoint by the total's sign; on zero, record the triplet, move both endpoints, and skip repeated inner values. Pruning preserves possible pairs; duplicate control emits each triplet once. At most n linear sweeps give O(n²) time and constant pointer state, excluding output and sort storage.
 
 </details>
 

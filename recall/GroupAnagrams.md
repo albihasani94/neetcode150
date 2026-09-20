@@ -38,20 +38,20 @@ flowchart LR
 
 `pots`, `tops`, and `stop` all produce the same sorted signature `opst`, so they accumulate in one bucket; `hat` produces `aht` and opens another.
 
-Boundary: the empty string has a valid all-zero signature and forms a normal bucket; duplicate input strings remain duplicate entries in that bucket.
+Boundary: sorting the empty string produces the key `""`, which forms a normal bucket; duplicate input strings remain duplicate entries in that bucket. An all-zero vector is its signature only in the counting alternative.
 
 ## Recall drill
 
-### What property must a grouping key have?
+### How would you recognize that two words belong in the same group?
 
 <details>
 <summary>Reveal</summary>
 
-It must be identical for all anagrams and different for any pair with different character counts.
+Give each word a canonical key: it must be identical for all anagrams and different for any pair with different character counts. Sorting the characters produces such a key.
 
 </details>
 
-### What does the fixed-alphabet alternative change?
+### How could the character restrictions reduce the work per word?
 
 <details>
 <summary>Reveal</summary>
@@ -60,8 +60,17 @@ It replaces each O(L log L) sort with an O(L) pass that builds a stable 26-count
 
 </details>
 
+### Rebuild the full algorithm and justify its costs.
+
+<details>
+<summary>Reveal</summary>
+
+Map each sorted-character signature to a list of original words, creating the list when needed. Each processed word belongs to exactly one bucket, and equal signatures mean equal multiplicities. Return the buckets. Sorting costs O(M · L log L), plus visiting M strings; keys and buckets use O(M + C) space for C total characters.
+
+</details>
+
 ## Trap and cost
 
 - **Trap:** using the raw mutable character array as a map key may compare identity instead of contents; convert the sorted characters into a stable value key.
 - **Time:** O(M · L log L) from sorting each of M strings of maximum length L.
-- **Space:** O(total input characters) for buckets and stored signatures, excluding returned references as appropriate.
+- **Space:** O(M + C), where C is the total input character count: stored signatures use at most O(C) characters, and buckets hold M references even when all strings are empty.

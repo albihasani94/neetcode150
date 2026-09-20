@@ -41,7 +41,7 @@ Boundary: repeated values such as `[1,1,1]` collapse to one set entry and yield 
 
 ## Recall drill
 
-### What gate makes the nested-looking walk linear overall?
+### Which values should begin a sequence search, and why does that avoid repeated work?
 
 <details>
 <summary>Reveal</summary>
@@ -56,6 +56,15 @@ Walk only when the predecessor is absent, so exactly one walk owns each maximal 
 <summary>Reveal</summary>
 
 The relation is between numeric neighbors, and the set provides those membership checks independent of array position.
+
+</details>
+
+### Rebuild the full algorithm and justify its costs.
+
+<details>
+<summary>Reveal</summary>
+
+Put all values in a set and initialize the best length to zero. Visit distinct values; only those without a predecessor begin a successor walk. Record the longest walk. Each maximal run is walked once, so set construction and all walks take O(n) average time and O(n) space.
 
 </details>
 

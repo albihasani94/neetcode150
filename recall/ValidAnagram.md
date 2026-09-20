@@ -42,12 +42,21 @@ One string may be rearranged into the other, so only character multiplicities su
 
 </details>
 
-### What alternative uses the fixed alphabet?
+### How could you improve the time bound using the input restrictions?
 
 <details>
 <summary>Reveal</summary>
 
 A 26-slot balance vector can add counts from one string and subtract counts from the other, reducing time to O(n) and auxiliary state to O(1).
+
+</details>
+
+### Rebuild the full algorithm and justify its costs.
+
+<details>
+<summary>Reveal</summary>
+
+Reject unequal lengths, then sort character copies and compare them. Sorting preserves multiplicity while removing order, so equal canonical forms prove anagrams. The two sorts take O(n log n) time for equal-length inputs; copies take O(n) space. The fixed alphabet also permits O(n) time and O(1) space with counts.
 
 </details>
 

@@ -43,12 +43,21 @@ The minimum price among days seen no later than today; when that minimum is toda
 
 </details>
 
-### Why are two scalars enough?
+### What information from processed days can affect future answers?
 
 <details>
 <summary>Reveal</summary>
 
 Only the cheapest eligible buy affects future sales, and only the largest completed profit affects the final answer.
+
+</details>
+
+### Rebuild the full algorithm and justify its costs.
+
+<details>
+<summary>Reveal</summary>
+
+Initialize the minimum from the first price and best profit to zero. For each later day, update the minimum and then the best with today's price minus that minimum. The minimum summarizes eligible buys; the best summarizes processed sales, with a same-day zero representing no trade. One pass takes O(n) time and O(1) space.
 
 </details>
 

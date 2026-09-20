@@ -39,21 +39,30 @@ Boundary: `(` reaches the end with `)` still expected, while `]` fails immediate
 
 ## Recall drill
 
-### What does the top of the stack mean?
+### What must you remember about an unfinished bracket prefix?
 
 <details>
 <summary>Reveal</summary>
 
-It is the one closing bracket allowed next by the most recent unmatched opener.
+Remember the closers still owed by unmatched openers, in a stack. Its top is the one closer allowed next by the most recent unmatched opener.
 
 </details>
 
-### Why are there two different empty-stack checks?
+### How do you detect an unexpected closer and an opener that never closes?
 
 <details>
 <summary>Reveal</summary>
 
 The in-loop check detects an unexpected closer; the final check detects unmatched openers.
+
+</details>
+
+### Rebuild the full algorithm and justify its costs.
+
+<details>
+<summary>Reveal</summary>
+
+Start an empty stack of expected closers. Push the matching closer for each opener; for each closer, reject an empty stack or a mismatch, otherwise pop. The top is always the next required closer. Accept only with an empty stack at the end. Each character takes constant work: O(n) time and O(n) worst-case space.
 
 </details>
 

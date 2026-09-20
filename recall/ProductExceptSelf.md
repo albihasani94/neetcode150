@@ -40,7 +40,7 @@ Boundary: `[0,1,2]` naturally becomes `[2,0,0]`; only the zero slot combines non
 
 ## Recall drill
 
-### What are the two factors for output index `i`?
+### How can you divide the work for one output slot without including its own input value?
 
 <details>
 <summary>Reveal</summary>
@@ -49,12 +49,21 @@ The product of all elements strictly left of `i` and the product of all elements
 
 </details>
 
-### Why is the output array enough to hold prefix state?
+### Where can intermediate results live while using only constant extra space?
 
 <details>
 <summary>Reveal</summary>
 
 Each output slot can temporarily store its left product, then be completed in place by the rolling right product.
+
+</details>
+
+### Rebuild the full algorithm and justify its costs.
+
+<details>
+<summary>Reveal</summary>
+
+Store products strictly left of each position in the output, starting with identity 1. Sweep backward with a suffix accumulator initially 1: multiply the slot by the suffix before extending the suffix with that input value. The two factors exclude the current value. Two passes take O(n) time and O(1) auxiliary space beyond output.
 
 </details>
 

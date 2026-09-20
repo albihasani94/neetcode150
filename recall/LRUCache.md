@@ -75,14 +75,16 @@ For capacity `2`, write the list from LRU to MRU:
 | `put(1, 10)` | `1` | insert 1 |
 | `put(2, 20)` | `1, 2` | 2 is MRU |
 | `get(1)` | `2, 1` | return 10; 1 becomes MRU |
-| `put(3, 30)` | `1, 3` | evict 2 |
-| `get(2)` | `1, 3` | return -1; misses do not change order |
+| `put(2, 25)` | `1, 2` | overwrite 20 with 25; promote 2; size stays 2 |
+| `get(2)` | `1, 2` | return 25, proving the value changed too |
+| `put(3, 30)` | `2, 3` | evict 1, since updating 2 counted as use |
+| `get(1)` | `2, 3` | return -1; misses do not change order |
 
 Boundary: with capacity `1`, inserting a different key always evicts the only existing real node; the sentinels remain untouched.
 
 ## Recall drill
 
-### 1. Which required operations force a combination of structures?
+### 1. Which operations must remain efficient, and what state supports them?
 
 <details>
 <summary>Reveal</summary>
@@ -109,7 +111,7 @@ Unlink the found node and insert that same node at the MRU end. Its value is ret
 
 </details>
 
-### 4. What are the two write branches?
+### 4. How should a write behave for each possible key state?
 
 <details>
 <summary>Reveal</summary>
@@ -118,12 +120,12 @@ For an existing key, update its value and promote its node. For a new key, creat
 
 </details>
 
-### 5. Can you derive the helpers before writing `get` and `put`?
+### 5. Rebuild `get` and `put`, including helpers and costs.
 
 <details>
 <summary>Reveal</summary>
 
-Unlink reconnects `prev` and `next`; insert-MRU connects the old MRU, the node, and `right`. Keep the matching map entry synchronized with each helper.
+Create a map and two linked sentinels. Unlink reconnects a node's neighbors and removes its map entry; insert-MRU connects the old MRU, the node, and `right`, and restores the entry. A read returns -1 on a miss or promotes and returns the found node. A write updates and promotes an existing node or inserts a new one, then evicts the LRU if oversized. Hash lookup and constant rewiring give O(1) average per operation; one node and map entry per key use O(capacity) space.
 
 </details>
 

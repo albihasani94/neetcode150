@@ -43,21 +43,30 @@ Boundary: a board containing only `.` is valid because no uniqueness rule is vio
 
 ## Recall drill
 
-### How many ownership regions does a filled cell affect?
+### What must you check before accepting a filled cell?
 
 <details>
 <summary>Reveal</summary>
 
-Exactly three: its row, its column, and its 3×3 box.
+Its digit must be absent from the previously seen digits in three regions: its row, its column, and its 3×3 box.
 
 </details>
 
-### How is the box key derived without conditionals?
+### How would you determine which box contains an arbitrary cell?
 
 <details>
 <summary>Reveal</summary>
 
 Use integer-division coordinates `(row / 3, column / 3)`.
+
+</details>
+
+### Rebuild the full algorithm and justify its costs.
+
+<details>
+<summary>Reveal</summary>
+
+Maintain seen digits for each row, column, and box. Ignore dots; map each filled cell to its three regions, reject a prior occurrence in any one, then record it in all three. The sets contain exactly the processed digits in their regions. Scanning 81 cells with bounded sets uses O(1) time and space.
 
 </details>
 

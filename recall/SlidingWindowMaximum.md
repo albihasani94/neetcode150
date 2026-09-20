@@ -9,7 +9,7 @@ Maximum for every overlapping width-`k` window + linear target → rescanning ea
 ## Recognition
 
 - **Decisive clues:** adjacent windows overlap heavily, so their maximum candidates should be reused.
-- **Constraint pressure:** O(nk) rescanning can approach O(n²) for `n = 1,000`; a monotonic deque gives O(n).
+- **Constraint pressure:** with up to 100,000 elements and `k` near `n/2`, rescanning all windows takes O(n²). A monotonic deque achieves O(n), improving on NeetCode's recommended O(n log n) or better.
 - **Why indices:** values alone cannot tell when a candidate has left the window.
 
 ## State and invariant
@@ -43,27 +43,42 @@ deque values:           [6]       maximum = 6
 
 ## Worked transition
 
-For `[1,2,1,0,4,2,6]`, `k=3`, the first window's deque represents values `[2,1]`, so emit `2`. When `4` enters, it removes smaller back candidates and becomes the front, producing the next maxima until `6` replaces it.
+For `[3,1,2]`, `k=2`, the first window has deque indices `[0,1]`, values `[3,1]`, so emit `3`. When index `2` enters:
+
+1. The new window starts at index `1`: expire index `0` from the front, even though its value `3` is still largest.
+2. The new value `2` dominates value `1`: remove index `1` from the back.
+3. Append index `2` and emit `2`. The result is `[3,2]`.
+
+Expiry and domination are separate reasons to discard a candidate; without front expiry, the second maximum would incorrectly remain `3`.
 
 Boundary: with `k=1`, each old index expires as the next arrives, so every element is its own window maximum.
 
 ## Recall drill
 
-### Why are smaller values removed from the back permanently?
+### When can an unexpired candidate be discarded permanently?
 
 <details>
 <summary>Reveal</summary>
 
-The new value is at least as large and expires later, so the older smaller value can never be the best remaining candidate.
+When a newer value is at least as large: it expires later, so the older candidate cannot be needed as the maximum. Remove such candidates from the back of the deque.
 
 </details>
 
-### Why store indices instead of values?
+### What information must each candidate retain as the window moves?
 
 <details>
 <summary>Reveal</summary>
 
-An index reveals both a candidate's value and whether it lies before the current window boundary.
+Its value and its position, to detect expiry. Storing an index provides both: look up the value in the input and compare the index with the current window boundary.
+
+</details>
+
+### Rebuild the full algorithm and justify its costs.
+
+<details>
+<summary>Reveal</summary>
+
+Allocate n - k + 1 outputs. For each index, expire old front indices, discard back candidates no larger than the entering value, then append it. Indices stay in window order and values strictly decrease. Emit the front value once the window is full. Each index enters and leaves once: O(n) time, O(k) auxiliary space, plus output.
 
 </details>
 

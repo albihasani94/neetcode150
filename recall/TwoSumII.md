@@ -4,12 +4,12 @@
 
 ## Rebuild chain
 
-Sorted input + exactly one pair → start with smallest and largest → compare sum to target → sortedness proves which endpoint can be discarded → converge → convert positions to 1-based indices.
+Sorted input + exactly one pair + required O(1) extra space → opposite-end pointers give O(n) time → compare sum to target → sortedness proves which endpoint can be discarded → converge → convert positions to 1-based indices.
 
 ## Recognition
 
 - **Decisive clue:** sorted order turns a comparison into information about an entire set of pairs.
-- **Why not a map:** hashing is linear too, but it spends O(n) space and ignores the ordering advantage.
+- **Space requirement:** the problem requires O(1) additional space. A hash map's O(n) storage violates that requirement; opposite-end pointers use the sorted order with constant state.
 - **Required output detail:** indices are 1-based and must use two distinct positions.
 
 ## State and invariant
@@ -33,12 +33,12 @@ Boundary: `[5,5]`, target `10`, begins with two distinct positions and returns t
 
 ## Recall drill
 
-### Why can a too-small sum discard the left endpoint?
+### What can you eliminate when the endpoint sum misses the target, and why?
 
 <details>
 <summary>Reveal</summary>
 
-It was paired with the largest candidate already; every other partner would make an equal or smaller sum.
+If the sum is too small, discard the left endpoint: even the largest available partner was insufficient. If it is too large, discard the right endpoint: even the smallest available partner exceeded the target.
 
 </details>
 
@@ -48,6 +48,15 @@ It was paired with the largest candidate already; every other partner would make
 <summary>Reveal</summary>
 
 The answer must use 1-based indices.
+
+</details>
+
+### Rebuild the full algorithm and justify its costs.
+
+<details>
+<summary>Reveal</summary>
+
+Use opposite-end pointers to meet the O(1) space requirement. Compare their values' sum with the target: discard left when too small, right when too large, and return both indices plus one on equality. Sortedness preserves a solution within the remaining interval. At most n pointer moves give O(n) time.
 
 </details>
 

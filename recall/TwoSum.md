@@ -33,7 +33,7 @@ Boundary: for `[5,5]`, target `10`, the first `5` is stored before the second is
 
 ## Recall drill
 
-### What equation creates the lookup key?
+### Once you choose one element, what must you learn about the rest?
 
 <details>
 <summary>Reveal</summary>
@@ -42,12 +42,21 @@ From `current + partner = target`, derive `partner = target - current`.
 
 </details>
 
-### Why must lookup happen before insertion?
+### When should the current element become available to future pairs?
 
 <details>
 <summary>Reveal</summary>
 
-Otherwise the current element can find itself when it equals its own complement, violating the distinct-index rule.
+Store it only after checking for an earlier complement. Otherwise the current element can find itself when it equals its own complement, violating the distinct-index rule.
+
+</details>
+
+### Rebuild the full algorithm and justify its costs.
+
+<details>
+<summary>Reveal</summary>
+
+Scan once with a value-to-earlier-index map. For each value, look for target minus that value before storing it; a hit supplies two distinct indices in increasing order. The map always represents the processed prefix. Average O(1) lookups give O(n) time and O(n) stored state.
 
 </details>
 
