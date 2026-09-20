@@ -11,14 +11,14 @@ Empty categories are the remaining gaps. Final wording belongs to the developer.
 - **Invariant:** every number already in the set appeared at an earlier index; `add` returning false is exactly the duplicate signal
 - **Minimal:** one hash set sized to `nums.length`; loop, try `add`, bail on false
 - **Cost:** O(n) time for one pass with O(1) average set ops; O(n) space for the set in the worst case
-- **Trap:** sorting instead of hashing — O(n log n) works but loses the linear property this pattern exists to teach
+- **Trap:** reversing the meaning of `Set.add` — true means a new value was inserted; false means the value was already present and a duplicate was found
 
 ### ValidAnagram
 - **Clue:** "rearrange t to form s" → character counts must match exactly; length check first as the free early exit
 - **Invariant:** anagrams are equal up to permutation, so any canonical form (sorted string or count vector) must be identical
 - **Minimal:** length guard, sort both char arrays, compare; a 26-slot int array is the O(n) alternative
 - **Cost:** O(n log n) time from the two sorts (O(n) with counting); O(n) space for the char copies
-- **Trap:** skipping the length check and relying on sorted comparison alone — fine for correctness here, but it wastes the cheapest possible rejection
+- **Trap:** comparing sorted char arrays with `==` or their `.equals` method — both compare array identity; use `Arrays.equals` or convert to strings and compare their contents
 
 ### TwoSum
 - **Clue:** unsorted array + "exactly one solution, same element not reused" → trade a second scan for a lookup table
@@ -35,11 +35,11 @@ Empty categories are the remaining gaps. Final wording belongs to the developer.
 - **Trap:** forgetting that keys are strings, not char arrays — using the raw array as a map key compares by identity, silently splitting groups
 
 ### TopKFrequentElements
-- **Clue:** "k most frequent" → frequency count first, then select top k; heap or sort both fit at this scale
-- **Invariant:** after counting, only relative frequency order matters; selecting k largest from n distinct keys needs no full ordering of the input
-- **Minimal:** `merge(num, 1, sum)` into a map, then stream the entries, sort by descending count, limit k
-- **Cost:** O(n + m log m) time for n elements and m distinct values (a size-m min-heap gives O(n + m log k)); O(m) space for the map
-- **Trap:** comparing entries with subtraction (`a - b`) instead of `Integer.compare` — large counts overflow and corrupt the ordering
+- **Clue:** "k most frequent" → count first, then select by frequency; sorting works here, while frequencies bounded by input length also allow linear-time buckets
+- **Invariant:** the map counts each distinct value exactly once per occurrence; sorting these entries by descending count puts the k most frequent values first without repeatedly counting the input
+- **Minimal:** `merge(num, 1, Integer::sum)` into a map; sort entries by descending count, take k, return their keys
+- **Cost:** O(n + m log m) time for n elements and m distinct values; O(m) auxiliary space for the map and sorting, plus O(k) output; a size-k min-heap instead gives O(n + m log(k + 1)) time
+- **Trap:** sorting by the numbers themselves rather than their counts — for `[9, 1, 1]`, k = 1, the answer is 1, not 9
 
 ### EncodeDecodeStrings
 - **Clue:** design encode/decode round-trip where strings may contain any character → delimiters alone fail; embed the length
@@ -58,15 +58,15 @@ Empty categories are the remaining gaps. Final wording belongs to the developer.
 ### ValidSudoku
 - **Clue:** validate a partially filled board → three independent uniqueness checks per filled cell: row, column, 3×3 box
 - **Invariant:** a digit is valid iff it hasn't been seen before in its row, column, or box; seeing it twice anywhere is immediate failure
-- **Minimal:** three maps of sets keyed by row index, column index, and `(row/3, col/3)`; skip `.`, check-then-add each digit
-- **Cost:** O(1) effectively — fixed 81 cells with constant-size sets (O(n²) generalized to n×n)
-- **Trap:** wrong box key like `(i/3)*3 + j/3` vs `(i/3, j/3)` mixing conventions — pick one formula and verify corners map to distinct boxes
+- **Minimal:** three maps of sets keyed by row, column, and box; use `(row/3, col/3)` or `(row/3)*3 + col/3` for the box; skip `.`, check-then-add each digit
+- **Cost:** O(1) time and O(1) space — the board has exactly 81 cells, and all row, column, and box sets have fixed bounds
+- **Trap:** treating `.` as a digit — repeated empty cells are allowed, so skip them before checking or updating any set
 
 ### LongestConsecutiveSequence
 - **Clue:** longest run of consecutive integers, unsorted input, O(n) required → hash set, not sorting
-- **Invariant:** only sequence starts (numbers with no `x-1` present) begin walks; each element belongs to exactly one run, so every walk is over fresh territory
-- **Minimal:** load all values into a set; for each start, walk upward via `contains(x+1)` counting length
-- **Cost:** O(n) time — the predecessor gate ensures each element is visited at most twice; O(n) space for the set
+- **Invariant:** each distinct number is considered once as a possible start; only numbers with no `x-1` begin walks, so each run is traversed once
+- **Minimal:** load all values into a set; iterate that deduplicated set, skip numbers with a predecessor, and walk upward from each start via `contains(x+1)`, tracking the longest run
+- **Cost:** O(n) expected time — building the set and visiting each distinct number a constant number of times use average O(1) set operations; O(n) space for the set
 - **Trap:** dropping the `contains(x-1)` check — then every run is walked once per member and degenerates toward O(n²) on long runs
 
 ## Two Pointers
@@ -87,17 +87,17 @@ Empty categories are the remaining gaps. Final wording belongs to the developer.
 
 ### ThreeSum
 - **Clue:** all unique triplets summing to zero, no duplicate triplets → sort, fix one element, two-pointer the remainder
-- **Invariant:** after sorting, skipping equal adjacent values at every level guarantees each triplet is generated exactly once; `nums[i] > 0` ends the search since three positives cannot sum to zero
-- **Minimal:** sort; outer loop picks anchor i (skip duplicates); inner two-pointer sweep moves l/r by sign of the sum, skipping duplicates after each hit
-- **Cost:** O(n²) time — O(n log n) sort plus n linear sweeps; O(1) extra space ignoring the output and sort's footprint
-- **Trap:** deduping only the outer anchor and not l/r after recording a hit — duplicate triplets leak through whenever the inner values repeat
+- **Invariant:** sorted order lets each sum comparison discard an impossible endpoint; unique anchors and skipping repeated left values after a hit prevent duplicate triplets; a positive anchor ends the search
+- **Minimal:** sort; pick each distinct anchor i; sweep l/r by the sum's sign; on a hit, record it, move both pointers, then skip duplicate left values
+- **Cost:** O(n²) time from n linear sweeps, plus the smaller O(n log n) sorting cost; the sweep uses O(1) auxiliary space, excluding sorting workspace and the output
+- **Trap:** skipping duplicate anchors alone can still repeat a triplet, as in `[-2, 0, 0, 2, 2]`; after a hit and moving both pointers, deduplicating either inner pointer suffices
 
 ### ContainerWithMostWater
 - **Clue:** maximize area between two lines → widest window first, then sacrifice width only when it can buy height
-- **Invariant:** moving the taller wall inward can never help — area stays capped by the shorter wall while shrinking; so moving the shorter side never discards the optimum
+- **Invariant:** after recording the current area, no narrower pair retaining the shorter wall can improve it; discarding that wall preserves every opportunity to beat the best so far
 - **Minimal:** pointers at both ends; record `width × min(heights)`; advance the shorter side each step
 - **Cost:** O(n) time, one converging pass; O(1) space
-- **Trap:** advancing both pointers or the taller one — either can throw away the optimal pair since only the shorter wall bounds the area
+- **Trap:** discarding the taller wall when heights differ can lose the optimum; move the shorter side, while equal heights allow moving either side or both
 
 ### TrappingRainWater
 - **Clue:** water above each bar = `min(maxLeft, maxRight) − height` → track both maxes from the ends instead of precomputing arrays
@@ -110,44 +110,44 @@ Empty categories are the remaining gaps. Final wording belongs to the developer.
 
 ### BestTimeToBuyAndSellStock
 - **Clue:** single buy-then-sell pass for max profit → at each day, best sale pairs it with the cheapest price seen so far
-- **Invariant:** `minPrice` is always the minimum of prices before index i, so `prices[i] − minPrice` is the best profit selling exactly on day i; taking the running max covers every pair without comparing all n² of them
-- **Minimal:** one loop updating both scalars per step: `min(minPrice, p)`, then `max(maxProfit, p − minPrice)`
+- **Invariant:** after updating `minPrice`, it is the minimum through today; today's candidate uses the cheapest earlier buy or yields harmless zero at a new minimum; the running best covers all sale days without testing every pair
+- **Minimal:** initialize `minPrice = prices[0]`, `maxProfit = 0`; scan forward, update `minPrice = min(minPrice, p)`, then `maxProfit = max(maxProfit, p - minPrice)`
 - **Cost:** O(n) time, single pass; O(1) space — two scalars
-- **Trap:** updating profit using the new minPrice after already overwriting it with today's price — that computes profit of 0; update maxProfit from the *old* minPrice first (or evaluate in an order where the min used predates i)
+- **Trap:** subtracting the global minimum from the global maximum ignores buy-before-sell order — `[2, 1]` permits no profit, even though its maximum minus minimum is 1
 
 ### LongestSubstringWithoutRepeatingCharacters
 - **Clue:** longest substring with all-distinct chars → window whose contents are exactly the current distinct set; shrink only when a duplicate forces it
-- **Invariant:** `[left, right]` never contains a repeat; each right-char collision shrinks from the left until that char is evicted
-- **Minimal:** hash set of window chars; extend right, while the new char is present remove `s[left]` and advance left, then record `window.size()`
+- **Invariant:** after shrinking and inserting the right character, the set contains exactly the distinct characters in `[left, right]`; shrinking just past a collision preserves the longest valid window ending there
+- **Minimal:** hash set of window chars; for each right character, remove `s[left]` and advance left while that character is already present; then add it and update the best with `window.size()`
 - **Cost:** O(n) time — left and right each move forward at most n times; O(k) space for the set, k = alphabet/window size
 - **Trap:** clearing or rebuilding the whole window on any duplicate instead of shrinking just past the previous occurrence — that drops valid longer windows
 
 ### LongestRepeatingCharacterReplacement
 - **Clue:** longest substring after ≤ k replacements → window is feasible iff `(window length − count of its most frequent char) ≤ k`
-- **Invariant:** `maxFrequency` holds the highest single-char count seen in *any* window so far; the validity check uses this historical max, which may be stale but never invalidates an already-recorded answer
-- **Minimal:** int[26] counts; extend right, increment `maxFrequency`, shrink left only while `length − maxFrequency > k`, record best length
-- **Cost:** O(n) time — the window slides monotonically, left never moves backward; O(1) space for the 26-slot array
-- **Trap:** recomputing or decreasing `maxFrequency` on shrink and expecting exact tracking — keeping the stale max is what preserves O(n); recomputing per step makes the shrink loop quadratic-ish and adds nothing to correctness of the final answer
+- **Invariant:** `maxFrequency` is a historical maximum; once stale, it only preserves a length already achieved by a valid window, and a new frequency record is needed for further growth, so the best length remains sound
+- **Minimal:** int[26] counts; extend right with `maxFrequency = max(maxFrequency, ++counts[index])`; while `length - maxFrequency > k`, decrement the departing count and advance left; record best length
+- **Cost:** O(n) time because both pointers only advance; O(1) space for 26 counts; recomputing the maximum over those 26 counts would also be O(26n) = O(n)
+- **Trap:** treating the historical maximum as the current window's true count — a stale value can retain an invalid window, so this method certifies the best length, not every retained substring
 
 ### PermutationInString
 - **Clue:** does s2 contain a permutation of s1 → permutation = same character multiset, so slide a fixed-length window and compare counts
 - **Invariant:** the window always spans exactly `s1.length()` consecutive chars once full; its count vector equals s1's iff that stretch is a permutation
-- **Minimal:** two int[26] arrays — target counts and window counts; add entering char, drop leaving char once past length, compare with `Arrays.equals`
-- **Cost:** O(26·n) ≈ O(n) time from the comparison at each position; O(1) space for the two arrays
-- **Trap:** forgetting to decrement the char exiting the window (`i − s1.length()`) — every subsequent count comparison is polluted and false positives/negatives follow; also skip the compare until the window is full (`i ≥ s1.length() − 1`)
+- **Minimal:** two int[26] arrays — target counts and window counts; add the entering char, drop the leaving char once past the target length, and compare with `Arrays.equals` once the window is full
+- **Cost:** O(m + 26n) = O(m + n) time for m = s1.length() and n = s2.length(); this Java implementation uses O(m) auxiliary space for `s1.toCharArray()`, plus O(1) for the two count arrays
+- **Trap:** forgetting to decrement the exiting char at `i - s1.length()` accumulates counts instead of sliding them — s1 = `"ab"`, s2 = `"cab"` then misses the valid `"ab"` window
 
-### Minimum Window Substring
+### MinimumWindowSubstring
 - **Clue:** "smallest substring of s containing all of t" → grow right until valid, shrink left while valid; validity tracked by counters, never re-scans
 - **Invariant:** `have` = how many *distinct* needed chars currently meet their required count in the window; window is valid ⟺ `have == needs.size()`
-- **Minimal:** frequency map for t; right ptr adds a char and increments `have` the moment its count hits the need; while valid, record best and shrink left
-- **Cost:** O(|s| + |t|) — both pointers only move forward; O(|t|) for the two maps
-- **Trap:** ticking `have` on total matched characters instead of distinct satisfied ones; with duplicates in t that overcounts and the shrink loop corrupts the answer
+- **Minimal:** count t; track needed chars as right grows, incrementing `have` when a count reaches its requirement; while valid, record the best bounds and remove left, decrementing `have` if a needed count falls below its requirement
+- **Cost:** O(|s| + |t|) time because both pointers only advance; O(|t|) auxiliary space for needed-character maps and `t.toCharArray()`, plus O(L) for the returned substring of length L
+- **Trap:** mixing counting units — distinct satisfied characters must be compared with `needs.size()`; counting matched occurrences is a valid alternative only when capped by each requirement and compared with `t.length()`
 
 ### SlidingWindowMaximum
 - **Clue:** maximum of every fixed-size window under linear-time constraints → keep only candidates in a monotonic decreasing deque
 - **Invariant:** deque indices stay inside the window and their values decrease front-to-back, so the front is the maximum; an older value no larger than the new one can never win again and is discarded instead of rescanned
 - **Minimal:** allocate `n - k + 1` results; for each right index, evict front indices `<= right - k`, pop back values `<= nums[right]`, append right, then emit the front once the window is full
-- **Cost:** O(n) time because every index is appended and removed at most once; O(k) space for at most one window's candidate indices
+- **Cost:** O(n) time because every index is appended and removed at most once; O(k) auxiliary space for candidate indices, excluding the O(n - k + 1) output array
 - **Trap:** the number of windows is `n - k + 1`, not `n / k + 1`; the windows overlap rather than partitioning the array
 
 ## Stack
